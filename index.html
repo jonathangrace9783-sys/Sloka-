@@ -1,117 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  />
+  >
 
   <meta
     name="description"
-    content="Slokka Australia — discover local adult directory listings across Sydney, Melbourne, Brisbane, Perth and more."
-  />
+    content="Slokka Australia — browse local directory listings by category and city."
+  >
 
-  <title>Slokka Australia — Local Directory</title>
+  <meta name="theme-color" content="#ffffff">
 
-  <link rel="stylesheet" href="css/style.css" />
+  <title>Slokka Australia</title>
+
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-  <!-- =========================================
-       AGE VERIFICATION
-  ========================================== -->
+  <!-- ==========================================
+       18+ AGE VERIFICATION
+  =========================================== -->
 
   <div
     id="ageGate"
     class="age-gate"
-    aria-modal="true"
     role="dialog"
+    aria-modal="true"
+    aria-labelledby="ageGateTitle"
   >
+
     <div class="age-gate-card">
 
-      <div class="age-logo">SLOKKA</div>
+      <div class="age-gate-logo">
+        SLOKKA
+      </div>
 
-      <div class="age-icon">18+</div>
+      <div class="age-badge">
+        18+
+      </div>
 
-      <h2>Are you 18 or older?</h2>
+      <h2 id="ageGateTitle">
+        Are you 18 or older?
+      </h2>
 
       <p>
-        This website contains adult-oriented directory
-        listings and is intended only for adults.
+        This website is intended for adults aged 18
+        and over.
       </p>
 
-      <div class="age-actions">
-        <button id="enterSite" class="btn-primary">
+      <div class="age-gate-actions">
+
+        <button
+          type="button"
+          id="enterSite"
+          class="btn btn-primary"
+        >
           Yes, Enter
         </button>
 
-        <button id="leaveSite" class="btn-secondary">
+        <button
+          type="button"
+          id="leaveSite"
+          class="btn btn-secondary"
+        >
           No, Leave
         </button>
+
       </div>
 
       <small>
-        By entering, you confirm that you are 18 years
-        of age or older.
+        By entering this website, you confirm that
+        you are at least 18 years old.
       </small>
 
     </div>
+
   </div>
 
 
-  <!-- =========================================
+  <!-- ==========================================
        HEADER
-  ========================================== -->
+  =========================================== -->
 
   <header class="site-header">
 
-    <div class="header-inner">
+    <div class="header-container">
 
-      <a href="index.html" class="logo">
+      <a
+        href="index.html"
+        class="site-logo"
+        aria-label="Slokka Home"
+      >
         SLOKKA
       </a>
+
 
       <div class="header-actions">
 
         <button
-          class="header-icon"
-          id="headerSearchBtn"
+          type="button"
+          id="searchToggle"
+          class="header-button"
           aria-label="Search"
         >
-          🔎
+          <span>⌕</span>
         </button>
 
         <button
-          class="header-icon"
-          id="accountBtn"
+          type="button"
+          id="accountButton"
+          class="header-button"
           aria-label="Account"
         >
-          ♙
+          <span>♙</span>
         </button>
 
         <button
-          class="header-icon"
-          id="menuBtn"
-          aria-label="Menu"
+          type="button"
+          id="menuButton"
+          class="header-button"
+          aria-label="Open menu"
+          aria-expanded="false"
         >
-          ☰
+          <span>☰</span>
         </button>
 
       </div>
 
     </div>
 
-    <nav id="mobileMenu" class="mobile-menu">
 
-      <a href="#categories">Categories</a>
-      <a href="#cities">Cities</a>
-      <a href="#directory">Directory</a>
-      <a href="#about">About</a>
+    <!-- Mobile / dropdown navigation -->
 
-      <a href="#post-ad" class="menu-post-ad">
+    <nav
+      id="siteMenu"
+      class="site-menu"
+      aria-label="Main navigation"
+    >
+
+      <a href="#categories">
+        Categories
+      </a>
+
+      <a href="#cities">
+        Cities
+      </a>
+
+      <a href="#listings">
+        Listings
+      </a>
+
+      <a href="#about">
+        About
+      </a>
+
+      <a
+        href="#post-ad"
+        class="menu-post-button"
+      >
         POST YOUR AD
       </a>
 
@@ -120,48 +171,73 @@
   </header>
 
 
-  <!-- =========================================
-       HERO
-  ========================================== -->
+  <!-- ==========================================
+       MAIN
+  =========================================== -->
 
   <main>
 
-    <section class="hero">
+
+    <!-- ========================================
+         HERO
+    ========================================= -->
+
+    <section class="hero-section">
+
+      <div class="hero-image">
+
+        <img
+          id="heroImage"
+          src="assets/images/hero/hero.webp"
+          alt="Slokka"
+        >
+
+      </div>
 
       <div class="hero-overlay"></div>
 
+
       <div class="hero-content">
 
-        <p class="hero-small">
-          AUSTRALIA'S LOCAL DIRECTORY
-        </p>
+        <span class="hero-label">
+          AUSTRALIA LOCAL DIRECTORY
+        </span>
 
         <h1>
-          Single? Taken?
-          <br />
-          It doesn't matter.
+          Discover local listings
+          <br>
+          across Australia
         </h1>
 
-        <p class="hero-description">
-          Discover local listings and connections
-          across Australia.
+        <p>
+          Search by city, category or listing.
         </p>
 
-        <!-- Search -->
 
-        <form id="heroSearch" class="hero-search">
+        <!-- Main search -->
 
-          <span class="search-symbol">⌕</span>
+        <form
+          id="mainSearch"
+          class="main-search"
+        >
+
+          <span class="search-icon">
+            ⌕
+          </span>
 
           <input
-            id="searchInput"
             type="search"
-            placeholder="Search city, category or listing..."
+            id="searchInput"
+            name="search"
+            placeholder="Search city or category..."
             autocomplete="off"
-          />
+          >
 
-          <button type="submit">
-            SEARCH
+          <button
+            type="submit"
+            class="search-button"
+          >
+            Search
           </button>
 
         </form>
@@ -171,53 +247,67 @@
     </section>
 
 
-    <!-- =========================================
-         QUICK CITIES
-    ========================================== -->
+    <!-- ========================================
+         QUICK CITY NAVIGATION
+    ========================================= -->
 
-    <section class="quick-cities">
+    <section class="quick-navigation">
 
       <div class="container">
 
-        <div class="city-scroll">
+        <div class="quick-navigation-scroll">
 
           <button
-            class="city-pill active"
-            data-city="All"
+            type="button"
+            class="city-filter active"
+            data-city="all"
           >
             All Australia
           </button>
 
           <button
-            class="city-pill"
+            type="button"
+            class="city-filter"
             data-city="Sydney"
           >
             Sydney
           </button>
 
           <button
-            class="city-pill"
+            type="button"
+            class="city-filter"
             data-city="Melbourne"
           >
             Melbourne
           </button>
 
           <button
-            class="city-pill"
+            type="button"
+            class="city-filter"
             data-city="Brisbane"
           >
             Brisbane
           </button>
 
           <button
-            class="city-pill"
+            type="button"
+            class="city-filter"
             data-city="Perth"
           >
             Perth
           </button>
 
           <button
-            class="city-pill"
+            type="button"
+            class="city-filter"
+            data-city="Adelaide"
+          >
+            Adelaide
+          </button>
+
+          <button
+            type="button"
+            class="city-filter"
             data-city="Canberra"
           >
             Canberra
@@ -230,17 +320,20 @@
     </section>
 
 
-    <!-- =========================================
-         HOT MEETINGS / FEATURED
-    ========================================== -->
+    <!-- ========================================
+         CATEGORIES
+    ========================================= -->
 
-    <section id="directory" class="section">
+    <section
+      id="categories"
+      class="section"
+    >
 
       <div class="container">
 
         <div class="section-heading">
 
-          <span class="eyebrow">
+          <span class="section-label">
             EXPLORE
           </span>
 
@@ -249,52 +342,64 @@
           </h2>
 
           <p>
-            Browse local directory categories
-            and discover listings in your area.
+            Browse listings by category and location.
           </p>
 
         </div>
 
 
-        <!-- Featured cards -->
+        <div class="category-grid">
 
-        <div class="featured-grid">
 
-          <article class="category-card">
+          <!-- Category 1 -->
 
-            <div class="category-image">
+          <article
+            class="category-card"
+            data-category="Escorts"
+          >
+
+            <a
+              href="#listings"
+              class="category-image"
+            >
+
               <img
                 src="assets/images/categories/escorts.webp"
-                alt="Escorts category"
+                alt="Escorts"
                 loading="lazy"
-              />
-            </div>
+              >
 
-            <div class="category-body">
+            </a>
 
-              <h3>Escorts</h3>
+            <div class="category-content">
 
-              <div class="category-links">
-                <a href="#" data-category="Escorts">
+              <h3>
+                Escorts
+              </h3>
+
+              <div class="category-city-links">
+
+                <a href="#listings">
                   Sydney
                 </a>
 
-                <a href="#" data-category="Escorts">
+                <a href="#listings">
                   Melbourne
                 </a>
 
-                <a href="#" data-category="Escorts">
+                <a href="#listings">
                   Brisbane
                 </a>
 
-                <a href="#" data-category="Escorts">
+                <a href="#listings">
                   Perth
                 </a>
+
               </div>
 
               <a
-                href="#directory"
-                class="view-category"
+                href="#listings"
+                class="category-more"
                 data-category="Escorts"
               >
                 View listings →
@@ -305,41 +410,55 @@
           </article>
 
 
-          <article class="category-card">
+          <!-- Category 2 -->
 
-            <div class="category-image">
+          <article
+            class="category-card"
+            data-category="Transsexual"
+          >
+
+            <a
+              href="#listings"
+              class="category-image"
+            >
+
               <img
                 src="assets/images/categories/transsexual.webp"
-                alt="Transsexual category"
+                alt="Transsexual"
                 loading="lazy"
-              />
-            </div>
+              >
 
-            <div class="category-body">
+            </a>
 
-              <h3>Transsexual</h3>
+            <div class="category-content">
 
-              <div class="category-links">
-                <a href="#" data-category="Transsexual">
+              <h3>
+                Transsexual
+              </h3>
+
+              <div class="category-city-links">
+
+                <a href="#listings">
                   Sydney
                 </a>
 
-                <a href="#" data-category="Transsexual">
+                <a href="#listings">
                   Melbourne
                 </a>
 
-                <a href="#" data-category="Transsexual">
+                <a href="#listings">
                   Brisbane
                 </a>
 
-                <a href="#" data-category="Transsexual">
+                <a href="#listings">
                   Perth
                 </a>
+
               </div>
 
               <a
-                href="#directory"
-                class="view-category"
+                href="#listings"
+                class="category-more"
                 data-category="Transsexual"
               >
                 View listings →
@@ -350,41 +469,55 @@
           </article>
 
 
-          <article class="category-card">
+          <!-- Category 3 -->
 
-            <div class="category-image">
+          <article
+            class="category-card"
+            data-category="Male Escorts"
+          >
+
+            <a
+              href="#listings"
+              class="category-image"
+            >
+
               <img
                 src="assets/images/categories/male-escorts.webp"
-                alt="Male Escorts category"
+                alt="Male Escorts"
                 loading="lazy"
-              />
-            </div>
+              >
 
-            <div class="category-body">
+            </a>
 
-              <h3>Male Escorts</h3>
+            <div class="category-content">
 
-              <div class="category-links">
-                <a href="#" data-category="Male Escorts">
+              <h3>
+                Male Escorts
+              </h3>
+
+              <div class="category-city-links">
+
+                <a href="#listings">
                   Sydney
                 </a>
 
-                <a href="#" data-category="Male Escorts">
+                <a href="#listings">
                   Melbourne
                 </a>
 
-                <a href="#" data-category="Male Escorts">
+                <a href="#listings">
                   Brisbane
                 </a>
 
-                <a href="#" data-category="Male Escorts">
+                <a href="#listings">
                   Perth
                 </a>
+
               </div>
 
               <a
-                href="#directory"
-                class="view-category"
+                href="#listings"
+                class="category-more"
                 data-category="Male Escorts"
               >
                 View listings →
@@ -395,41 +528,55 @@
           </article>
 
 
-          <article class="category-card">
+          <!-- Category 4 -->
 
-            <div class="category-image">
+          <article
+            class="category-card"
+            data-category="Adult Meetings"
+          >
+
+            <a
+              href="#listings"
+              class="category-image"
+            >
+
               <img
                 src="assets/images/categories/adult-meetings.webp"
-                alt="Adult Meetings category"
+                alt="Adult Meetings"
                 loading="lazy"
-              />
-            </div>
+              >
 
-            <div class="category-body">
+            </a>
 
-              <h3>Adult Meetings</h3>
+            <div class="category-content">
 
-              <div class="category-links">
-                <a href="#" data-category="Adult Meetings">
+              <h3>
+                Adult Meetings
+              </h3>
+
+              <div class="category-city-links">
+
+                <a href="#listings">
                   Sydney
                 </a>
 
-                <a href="#" data-category="Adult Meetings">
+                <a href="#listings">
                   Melbourne
                 </a>
 
-                <a href="#" data-category="Adult Meetings">
+                <a href="#listings">
                   Brisbane
                 </a>
 
-                <a href="#" data-category="Adult Meetings">
+                <a href="#listings">
                   Perth
                 </a>
+
               </div>
 
               <a
-                href="#directory"
-                class="view-category"
+                href="#listings"
+                class="category-more"
                 data-category="Adult Meetings"
               >
                 View listings →
@@ -446,108 +593,177 @@
     </section>
 
 
-    <!-- =========================================
-         CATEGORY DIRECTORY
-    ========================================== -->
+    <!-- ========================================
+         LISTINGS AREA
+         
+         Profiles will be inserted here by JS.
+         1,000 profile records will live separately.
+    ========================================= -->
 
-    <section id="categories" class="section section-light">
+    <section
+      id="listings"
+      class="section listings-section"
+    >
 
       <div class="container">
 
         <div class="section-heading">
 
-          <span class="eyebrow">
-            CATEGORIES
+          <span class="section-label">
+            LISTINGS
           </span>
 
           <h2>
-            Browse by category
+            Browse local listings
           </h2>
 
-          <p>
-            Find listings by category and location.
+          <p id="resultsText">
+            Loading listings...
           </p>
 
         </div>
 
 
-        <div class="category-directory">
+        <!-- Filters -->
 
-          <div class="directory-block">
+        <div class="listing-filters">
 
-            <h3>Escorts</h3>
+          <select
+            id="citySelect"
+            aria-label="Filter by city"
+          >
 
-            <div class="tag-list">
+            <option value="all">
+              All cities
+            </option>
 
-              <a href="#">Sydney Escorts</a>
-              <a href="#">Melbourne Escorts</a>
-              <a href="#">Brisbane Escorts</a>
-              <a href="#">Perth Escorts</a>
-              <a href="#">Adelaide Escorts</a>
-              <a href="#">Canberra Escorts</a>
-              <a href="#">Gold Coast Escorts</a>
+            <option value="Sydney">
+              Sydney
+            </option>
 
-            </div>
+            <option value="Melbourne">
+              Melbourne
+            </option>
 
-          </div>
+            <option value="Brisbane">
+              Brisbane
+            </option>
 
+            <option value="Perth">
+              Perth
+            </option>
 
-          <div class="directory-block">
+            <option value="Adelaide">
+              Adelaide
+            </option>
 
-            <h3>Transsexual</h3>
+            <option value="Canberra">
+              Canberra
+            </option>
 
-            <div class="tag-list">
+            <option value="Gold Coast">
+              Gold Coast
+            </option>
 
-              <a href="#">Sydney</a>
-              <a href="#">Melbourne</a>
-              <a href="#">Brisbane</a>
-              <a href="#">Perth</a>
-              <a href="#">Adelaide</a>
-              <a href="#">Canberra</a>
-              <a href="#">Gold Coast</a>
+            <option value="Newcastle">
+              Newcastle
+            </option>
 
-            </div>
+            <option value="Hobart">
+              Hobart
+            </option>
 
-          </div>
+            <option value="Darwin">
+              Darwin
+            </option>
 
-
-          <div class="directory-block">
-
-            <h3>Male Escorts</h3>
-
-            <div class="tag-list">
-
-              <a href="#">Sydney</a>
-              <a href="#">Melbourne</a>
-              <a href="#">Brisbane</a>
-              <a href="#">Perth</a>
-              <a href="#">Adelaide</a>
-              <a href="#">Canberra</a>
-              <a href="#">Gold Coast</a>
-
-            </div>
-
-          </div>
+          </select>
 
 
-          <div class="directory-block">
+          <select
+            id="categorySelect"
+            aria-label="Filter by category"
+          >
 
-            <h3>Adult Meetings</h3>
+            <option value="all">
+              All categories
+            </option>
 
-            <div class="tag-list">
+            <option value="Escorts">
+              Escorts
+            </option>
 
-              <a href="#">Sydney</a>
-              <a href="#">Melbourne</a>
-              <a href="#">Brisbane</a>
-              <a href="#">Perth</a>
-              <a href="#">Adelaide</a>
-              <a href="#">Canberra</a>
-              <a href="#">Gold Coast</a>
+            <option value="Transsexual">
+              Transsexual
+            </option>
 
-            </div>
+            <option value="Male Escorts">
+              Male Escorts
+            </option>
 
-          </div>
+            <option value="Adult Meetings">
+              Adult Meetings
+            </option>
 
+          </select>
+
+
+          <select
+            id="sortSelect"
+            aria-label="Sort listings"
+          >
+
+            <option value="newest">
+              Newest
+            </option>
+
+            <option value="featured">
+              Featured
+            </option>
+
+            <option value="name">
+              Name
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- JavaScript inserts profile cards here -->
+
+        <div
+          id="listingGrid"
+          class="listing-grid"
+        >
+        </div>
+
+
+        <!-- No results -->
+
+        <div
+          id="noResults"
+          class="no-results"
+          hidden
+        >
+
+          <h3>
+            No listings found
+          </h3>
+
+          <p>
+            Try another city or category.
+          </p>
+
+        </div>
+
+
+        <!-- Pagination -->
+
+        <div
+          id="pagination"
+          class="pagination"
+        >
         </div>
 
       </div>
@@ -555,17 +771,20 @@
     </section>
 
 
-    <!-- =========================================
+    <!-- ========================================
          CITIES
-    ========================================== -->
+    ========================================= -->
 
-    <section id="cities" class="section">
+    <section
+      id="cities"
+      class="section cities-section"
+    >
 
       <div class="container">
 
         <div class="section-heading">
 
-          <span class="eyebrow">
+          <span class="section-label">
             LOCATIONS
           </span>
 
@@ -578,44 +797,94 @@
 
         <div class="cities-grid">
 
-          <a href="#" class="city-card">
+          <a
+            href="#listings"
+            class="city-card"
+            data-city="Sydney"
+          >
             <strong>Sydney</strong>
             <span>New South Wales</span>
           </a>
 
-          <a href="#" class="city-card">
+          <a
+            href="#listings"
+            class="city-card"
+            data-city="Melbourne"
+          >
             <strong>Melbourne</strong>
             <span>Victoria</span>
           </a>
 
-          <a href="#" class="city-card">
+          <a
+            href="#listings"
+            class="city-card"
+            data-city="Brisbane"
+          >
             <strong>Brisbane</strong>
             <span>Queensland</span>
           </a>
 
-          <a href="#" class="city-card">
+          <a
+            href="#listings"
+            class="city-card"
+            data-city="Perth"
+          >
             <strong>Perth</strong>
             <span>Western Australia</span>
           </a>
 
-          <a href="#" class="city-card">
+          <a
+            href="#listings"
+            class="city-card"
+            data-city="Adelaide"
+          >
             <strong>Adelaide</strong>
             <span>South Australia</span>
           </a>
 
-          <a href="#" class="city-card">
+          <a
+            href="#listings"
+            class="city-card"
+            data-city="Canberra"
+          >
             <strong>Canberra</strong>
             <span>Australian Capital Territory</span>
           </a>
 
-          <a href="#" class="city-card">
+          <a
+            href="#listings"
+            class="city-card"
+            data-city="Gold Coast"
+          >
             <strong>Gold Coast</strong>
             <span>Queensland</span>
           </a>
 
-          <a href="#" class="city-card">
+          <a
+            href="#listings"
+            class="city-card"
+            data-city="Newcastle"
+          >
             <strong>Newcastle</strong>
             <span>New South Wales</span>
+          </a>
+
+          <a
+            href="#listings"
+            class="city-card"
+            data-city="Hobart"
+          >
+            <strong>Hobart</strong>
+            <span>Tasmania</span>
+          </a>
+
+          <a
+            href="#listings"
+            class="city-card"
+            data-city="Darwin"
+          >
+            <strong>Darwin</strong>
+            <span>Northern Territory</span>
           </a>
 
         </div>
@@ -625,38 +894,153 @@
     </section>
 
 
-    <!-- =========================================
-         ABOUT / SEO CONTENT
-    ========================================== -->
+    <!-- ========================================
+         CATEGORY DIRECTORY
+    ========================================= -->
 
-    <section id="about" class="info-section">
+    <section class="section directory-section">
 
-      <div class="container narrow">
+      <div class="container">
 
-        <span class="eyebrow">
+        <div class="section-heading">
+
+          <span class="section-label">
+            DIRECTORY
+          </span>
+
+          <h2>
+            Browse by category
+          </h2>
+
+        </div>
+
+
+        <div class="directory-grid">
+
+
+          <div class="directory-box">
+
+            <h3>
+              Escorts
+            </h3>
+
+            <div class="directory-tags">
+
+              <a href="#listings">Sydney</a>
+              <a href="#listings">Melbourne</a>
+              <a href="#listings">Brisbane</a>
+              <a href="#listings">Perth</a>
+              <a href="#listings">Adelaide</a>
+              <a href="#listings">Canberra</a>
+              <a href="#listings">Gold Coast</a>
+              <a href="#listings">Newcastle</a>
+
+            </div>
+
+          </div>
+
+
+          <div class="directory-box">
+
+            <h3>
+              Transsexual
+            </h3>
+
+            <div class="directory-tags">
+
+              <a href="#listings">Sydney</a>
+              <a href="#listings">Melbourne</a>
+              <a href="#listings">Brisbane</a>
+              <a href="#listings">Perth</a>
+              <a href="#listings">Adelaide</a>
+              <a href="#listings">Canberra</a>
+              <a href="#listings">Gold Coast</a>
+              <a href="#listings">Newcastle</a>
+
+            </div>
+
+          </div>
+
+
+          <div class="directory-box">
+
+            <h3>
+              Male Escorts
+            </h3>
+
+            <div class="directory-tags">
+
+              <a href="#listings">Sydney</a>
+              <a href="#listings">Melbourne</a>
+              <a href="#listings">Brisbane</a>
+              <a href="#listings">Perth</a>
+              <a href="#listings">Adelaide</a>
+              <a href="#listings">Canberra</a>
+              <a href="#listings">Gold Coast</a>
+              <a href="#listings">Newcastle</a>
+
+            </div>
+
+          </div>
+
+
+          <div class="directory-box">
+
+            <h3>
+              Adult Meetings
+            </h3>
+
+            <div class="directory-tags">
+
+              <a href="#listings">Sydney</a>
+              <a href="#listings">Melbourne</a>
+              <a href="#listings">Brisbane</a>
+              <a href="#listings">Perth</a>
+              <a href="#listings">Adelaide</a>
+              <a href="#listings">Canberra</a>
+              <a href="#listings">Gold Coast</a>
+              <a href="#listings">Newcastle</a>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================================
+         ABOUT
+    ========================================= -->
+
+    <section
+      id="about"
+      class="about-section"
+    >
+
+      <div class="container about-container">
+
+        <span class="section-label">
           ABOUT SLOKKA
         </span>
 
         <h2>
-          Discover local listings across Australia
+          A local directory for Australia
         </h2>
 
         <p>
-          Slokka is an Australia-focused directory designed
-          to help adults browse local listings by city and
-          category.
+          Slokka provides an easy way for adults to
+          browse directory listings by city and category
+          across Australia.
         </p>
 
         <p>
-          Explore listings from major Australian cities
-          including Sydney, Melbourne, Brisbane, Perth,
-          Adelaide, Canberra and the Gold Coast.
-        </p>
-
-        <p>
-          Use the search and category filters to find
-          directory listings that match your location and
-          interests.
+          Search local listings, explore categories and
+          browse different Australian locations from one
+          place.
         </p>
 
       </div>
@@ -664,20 +1048,23 @@
     </section>
 
 
-    <!-- =========================================
+    <!-- ========================================
          POST YOUR AD
-    ========================================== -->
+    ========================================= -->
 
-    <section id="post-ad" class="post-ad-section">
+    <section
+      id="post-ad"
+      class="post-ad-section"
+    >
 
       <div class="container">
 
-        <div class="post-ad-content">
+        <div class="post-ad-inner">
 
           <div>
 
-            <span class="eyebrow">
-              FOR LISTING OWNERS
+            <span class="section-label">
+              LISTING OWNERS
             </span>
 
             <h2>
@@ -685,13 +1072,16 @@
             </h2>
 
             <p>
-              Create a directory listing and reach
-              people in your selected Australian city.
+              Create your listing and reach people in
+              your selected Australian location.
             </p>
 
           </div>
 
-          <a href="#" class="post-ad-button">
+          <a
+            href="#"
+            class="post-ad-button"
+          >
             POST YOUR AD
           </a>
 
@@ -704,39 +1094,38 @@
   </main>
 
 
-  <!-- =========================================
+  <!-- ==========================================
        FOOTER
-  ========================================== -->
+  =========================================== -->
 
   <footer class="site-footer">
 
     <div class="container">
 
-      <div class="footer-main">
+      <div class="footer-grid">
+
 
         <div class="footer-brand">
 
-          <a href="index.html" class="footer-logo">
+          <a
+            href="index.html"
+            class="footer-logo"
+          >
             SLOKKA
           </a>
 
           <p>
             Australia local directory.
-            Browse responsibly.
           </p>
 
-          <div class="socials">
+          <div class="social-links">
 
             <a href="#" aria-label="Instagram">
-              ◎
+              Instagram
             </a>
 
             <a href="#" aria-label="Facebook">
-              f
-            </a>
-
-            <a href="#" aria-label="X">
-              𝕏
+              Facebook
             </a>
 
           </div>
@@ -746,36 +1135,75 @@
 
         <div class="footer-column">
 
-          <h4>Directory</h4>
+          <h4>
+            Directory
+          </h4>
 
-          <a href="#categories">Categories</a>
-          <a href="#cities">Cities</a>
-          <a href="#directory">Listings</a>
-          <a href="#post-ad">Post your ad</a>
+          <a href="#categories">
+            Categories
+          </a>
+
+          <a href="#cities">
+            Cities
+          </a>
+
+          <a href="#listings">
+            Listings
+          </a>
+
+          <a href="#post-ad">
+            Post your ad
+          </a>
 
         </div>
 
 
         <div class="footer-column">
 
-          <h4>Support</h4>
+          <h4>
+            Support
+          </h4>
 
-          <a href="#">Help Centre</a>
-          <a href="#">Contact</a>
-          <a href="#">Safety</a>
-          <a href="#">Report a listing</a>
+          <a href="#">
+            Help Centre
+          </a>
+
+          <a href="#">
+            Contact
+          </a>
+
+          <a href="#">
+            Safety
+          </a>
+
+          <a href="#">
+            Report a listing
+          </a>
 
         </div>
 
 
         <div class="footer-column">
 
-          <h4>Legal</h4>
+          <h4>
+            Legal
+          </h4>
 
-          <a href="#">Terms</a>
-          <a href="#">Privacy</a>
-          <a href="#">18+ Policy</a>
-          <a href="#">Community Rules</a>
+          <a href="#">
+            Terms
+          </a>
+
+          <a href="#">
+            Privacy
+          </a>
+
+          <a href="#">
+            18+ Policy
+          </a>
+
+          <a href="#">
+            Community Rules
+          </a>
 
         </div>
 
@@ -799,12 +1227,12 @@
   </footer>
 
 
-  <!-- =========================================
-       JS
-  ========================================== -->
+  <!-- ==========================================
+       JAVASCRIPT
+  =========================================== -->
 
-  <script src="js/seed-data.js"></script>
+  <script src="js/profiles.js"></script>
   <script src="js/app.js"></script>
 
 </body>
-  </html>
+</html>
