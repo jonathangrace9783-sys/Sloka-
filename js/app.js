@@ -1,1028 +1,678 @@
-/* =========================================
-   AFTERDARK AU — FRONTEND JAVASCRIPT
-========================================= */
+// js/app.js
 
+document.addEventListener("DOMContentLoaded", () => {
+  // --------------------------------------------------
+  // DATA
+  // --------------------------------------------------
 
-/* =========================================
-   DEMO LISTING DATA
-========================================= */
+  const listings = Array.isArray(window.afterdarkDemoProfiles)
+    ? window.afterdarkDemoProfiles
+    : [];
 
-const listings = [
+  // --------------------------------------------------
+  // STATE
+  // --------------------------------------------------
 
-    {
-        id: 1,
-        name: "Ava",
-        city: "Sydney",
-        category: "Independent",
-        image: "assets/images/profile-1.jpg",
-        featured: true,
-        newest: 7,
-        description:
-            "Professional profile demo for the directory interface."
-    },
-
-    {
-        id: 2,
-        name: "Sophie",
-        city: "Melbourne",
-        category: "Studios",
-        image: "assets/images/profile-2.jpg",
-        featured: true,
-        newest: 6,
-        description:
-            "Studio listing demo for frontend development."
-    },
-
-    {
-        id: 3,
-        name: "Liam",
-        city: "Brisbane",
-        category: "Agencies",
-        image: "assets/images/profile-3.jpg",
-        featured: false,
-        newest: 5,
-        description:
-            "Agency profile demo with location information."
-    },
-
-    {
-        id: 4,
-        name: "Olivia",
-        city: "Perth",
-        category: "Independent",
-        image: "assets/images/profile-4.jpg",
-        featured: true,
-        newest: 4,
-        description:
-            "Independent profile demo for the directory."
-    },
-
-    {
-        id: 5,
-        name: "Taylor",
-        city: "Adelaide",
-        category: "Services",
-        image: "assets/images/profile-1.jpg",
-        featured: false,
-        newest: 3,
-        description:
-            "Service listing demo."
-    },
-
-    {
-        id: 6,
-        name: "Morgan",
-        city: "Gold Coast",
-        category: "Independent",
-        image: "assets/images/profile-2.jpg",
-        featured: false,
-        newest: 2,
-        description:
-            "Gold Coast profile demo."
-    },
-
-    {
-        id: 7,
-        name: "Jordan",
-        city: "Canberra",
-        category: "Agencies",
-        image: "assets/images/profile-3.jpg",
-        featured: false,
-        newest: 1,
-        description:
-            "Canberra agency listing demo."
-    }
-
-];
-
-
-/* =========================================
-   APPLICATION STATE
-========================================= */
-
-const state = {
-
+  const state = {
     keyword: "",
-
     city: "",
-
     category: "",
+    sort: "featured",
+    page: 1,
+    pageSize: 24
+  };
 
-    sort: "featured"
+  // --------------------------------------------------
+  // DOM ELEMENTS
+  // --------------------------------------------------
 
-};
+  const ageGate = document.getElementById("ageGate");
+  const enterWebsite = document.getElementById("enterWebsite");
+  const leaveWebsite = document.getElementById("leaveWebsite");
 
+  const searchInput = document.getElementById("searchInput");
+  const citySelect = document.getElementById("citySelect");
+  const searchButton = document.getElementById("searchButton");
 
-/* =========================================
-   DOM ELEMENTS
-========================================= */
+  const listingGrid = document.getElementById("listingGrid");
+  const emptyState = document.getElementById("emptyState");
+  const clearFiltersButton = document.getElementById("clearFilters");
 
-const ageGate =
-    document.getElementById("ageGate");
+  const sortSelect = document.getElementById("sortSelect");
+  const activeFilters = document.getElementById("activeFilters");
 
-const enterWebsite =
-    document.getElementById("enterWebsite");
+  const mobileMenuButton = document.getElementById("mobileMenuButton");
+  const mainNavigation = document.getElementById("mainNavigation");
 
-const leaveWebsite =
-    document.getElementById("leaveWebsite");
+  const postListingButton = document.getElementById("postListingButton");
 
-const searchInput =
-    document.getElementById("searchInput");
+  const toast = document.getElementById("toast");
 
-const citySelect =
-    document.getElementById("citySelect");
+  // --------------------------------------------------
+  // AGE GATE
+  // --------------------------------------------------
 
-const searchButton =
-    document.getElementById("searchButton");
+  function checkAgeGate() {
+    const ageVerified = localStorage.getItem("afterdarkAgeVerified");
 
-const sortSelect =
-    document.getElementById("sortSelect");
+    if (ageVerified === "true") {
+      if (ageGate) {
+        ageGate.style.display = "none";
+      }
+    } else {
+      if (ageGate) {
+        ageGate.style.display = "flex";
+      }
+    }
+  }
 
-const listingGrid =
-    document.getElementById("listingGrid");
+  if (enterWebsite) {
+    enterWebsite.addEventListener("click", () => {
+      localStorage.setItem("afterdarkAgeVerified", "true");
 
-const emptyState =
-    document.getElementById("emptyState");
+      if (ageGate) {
+        ageGate.style.display = "none";
+      }
+    });
+  }
 
-const clearFilters =
-    document.getElementById("clearFilters");
+  if (leaveWebsite) {
+    leaveWebsite.addEventListener("click", () => {
+      window.location.href = "https://www.google.com/";
+    });
+  }
 
-const activeFilters =
-    document.getElementById("activeFilters");
+  // --------------------------------------------------
+  // HELPERS
+  // --------------------------------------------------
 
-const mainNavigation =
-    document.getElementById("mainNavigation");
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 
-const mobileMenuButton =
-    document.getElementById("mobileMenuButton");
+  function getFilteredListings() {
+    let result = [...listings];
 
-const postListingButton =
-    document.getElementById("postListingButton");
+    // Keyword
+    if (state.keyword) {
+      const keyword = state.keyword.toLowerCase();
 
-const toast =
-    document.getElementById("toast");
-
-
-/* =========================================
-   AGE GATE
-========================================= */
-
-function checkAgeGate() {
-
-    const confirmed =
-        localStorage.getItem(
-            "afterdarkAgeConfirmed"
+      result = result.filter((profile) => {
+        return (
+          profile.displayName.toLowerCase().includes(keyword) ||
+          profile.username.toLowerCase().includes(keyword) ||
+          profile.city.toLowerCase().includes(keyword) ||
+          profile.category.toLowerCase().includes(keyword) ||
+          profile.description.toLowerCase().includes(keyword)
         );
-
-    if (confirmed === "yes") {
-
-        ageGate.classList.add("hidden");
-
+      });
     }
 
-}
+    // City
+    if (state.city) {
+      result = result.filter(
+        (profile) => profile.city === state.city
+      );
+    }
 
+    // Category
+    if (state.category) {
+      result = result.filter(
+        (profile) => profile.category === state.category
+      );
+    }
 
-checkAgeGate();
+    // Sorting
+    switch (state.sort) {
+      case "featured":
+        result.sort((a, b) => {
+          return Number(b.featured) - Number(a.featured);
+        });
+        break;
 
+      case "newest":
+        result.sort((a, b) => {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+        break;
 
-/* ENTER WEBSITE */
+      case "name":
+        result.sort((a, b) =>
+          a.displayName.localeCompare(b.displayName)
+        );
+        break;
 
-if (enterWebsite) {
+      default:
+        break;
+    }
 
-    enterWebsite.addEventListener(
-        "click",
-        function () {
+    return result;
+  }
 
-            localStorage.setItem(
-                "afterdarkAgeConfirmed",
-                "yes"
-            );
+  // --------------------------------------------------
+  // PHOTO FALLBACK
+  // --------------------------------------------------
 
-            ageGate.classList.add(
-                "hidden"
-            );
+  function getProfileImage(profile) {
+    if (
+      profile.photos &&
+      profile.photos.length > 0 &&
+      profile.photos[0].src
+    ) {
+      return profile.photos[0].src;
+    }
 
-        }
+    return "assets/images/profiles/placeholder.jpg";
+  }
+
+  // --------------------------------------------------
+  // RENDER LISTINGS
+  // --------------------------------------------------
+
+  function renderListings() {
+    if (!listingGrid) return;
+
+    const filtered = getFilteredListings();
+
+    const totalPages = Math.max(
+      1,
+      Math.ceil(filtered.length / state.pageSize)
     );
 
-}
+    if (state.page > totalPages) {
+      state.page = totalPages;
+    }
 
+    const start = (state.page - 1) * state.pageSize;
+    const end = start + state.pageSize;
 
-/* LEAVE WEBSITE */
+    const visibleListings = filtered.slice(start, end);
 
-if (leaveWebsite) {
+    listingGrid.innerHTML = "";
 
-    leaveWebsite.addEventListener(
-        "click",
-        function () {
+    if (visibleListings.length === 0) {
+      if (emptyState) {
+        emptyState.style.display = "block";
+      }
 
-            document.body.innerHTML = `
+      renderPagination(0);
+      return;
+    }
 
-                <main
-                    style="
-                        min-height:100vh;
-                        display:grid;
-                        place-items:center;
-                        padding:30px;
-                        text-align:center;
-                        font-family:Arial,sans-serif;
-                    "
-                >
+    if (emptyState) {
+      emptyState.style.display = "none";
+    }
 
-                    <div>
+    visibleListings.forEach((profile) => {
+      const card = document.createElement("article");
 
-                        <h1>
-                            Access unavailable
-                        </h1>
+      card.className = "listing-card";
 
-                        <p>
-                            This website is restricted
-                            to adults aged 18+.
-                        </p>
+      const image = getProfileImage(profile);
 
-                    </div>
+      card.innerHTML = `
+        <div class="listing-photo">
+          <img
+            src="${escapeHtml(image)}"
+            alt="${escapeHtml(profile.displayName)}"
+            loading="lazy"
+            onerror="this.src='assets/images/profiles/placeholder.jpg'"
+          >
 
-                </main>
+          ${
+            profile.featured
+              ? `<span class="featured-badge">Featured</span>`
+              : ""
+          }
 
-            `;
+          ${
+            profile.online
+              ? `<span class="online-badge">Online</span>`
+              : ""
+          }
+        </div>
 
-        }
+        <div class="listing-body">
+
+          <div class="listing-title-row">
+            <h3>${escapeHtml(profile.displayName)}</h3>
+
+            ${
+              profile.verified
+                ? `<span class="verified-badge" title="Verified">✓</span>`
+                : ""
+            }
+          </div>
+
+          <p class="listing-location">
+            ${escapeHtml(profile.city)}, ${escapeHtml(profile.state)}
+          </p>
+
+          <p class="listing-category">
+            ${escapeHtml(profile.category)}
+          </p>
+
+          <p class="listing-description">
+            ${escapeHtml(profile.description)}
+          </p>
+
+          <div class="listing-actions">
+
+            <button
+              class="btn btn-primary view-profile"
+              data-profile-id="${escapeHtml(profile.id)}"
+            >
+              View Profile
+            </button>
+
+            <button
+              class="btn btn-secondary contact-profile"
+              data-profile-id="${escapeHtml(profile.id)}"
+            >
+              Contact
+            </button>
+
+          </div>
+
+        </div>
+      `;
+
+      listingGrid.appendChild(card);
+    });
+
+    renderPagination(filtered.length);
+    attachListingEvents();
+  }
+
+  // --------------------------------------------------
+  // PAGINATION
+  // --------------------------------------------------
+
+  function renderPagination(totalItems) {
+    let pagination = document.getElementById("pagination");
+
+    if (!pagination) {
+      pagination = document.createElement("div");
+      pagination.id = "pagination";
+
+      if (listingGrid && listingGrid.parentNode) {
+        listingGrid.parentNode.appendChild(pagination);
+      }
+    }
+
+    pagination.innerHTML = "";
+
+    const totalPages = Math.ceil(totalItems / state.pageSize);
+
+    if (totalPages <= 1) {
+      return;
+    }
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className = "pagination-wrapper";
+
+    const previousButton = document.createElement("button");
+
+    previousButton.className = "pagination-button";
+    previousButton.textContent = "Previous";
+    previousButton.disabled = state.page === 1;
+
+    previousButton.addEventListener("click", () => {
+      if (state.page > 1) {
+        state.page--;
+        renderListings();
+
+        window.scrollTo({
+          top: listingGrid.offsetTop - 100,
+          behavior: "smooth"
+        });
+      }
+    });
+
+    wrapper.appendChild(previousButton);
+
+    const maxButtons = 7;
+
+    let startPage = Math.max(
+      1,
+      state.page - Math.floor(maxButtons / 2)
     );
 
-}
+    let endPage = Math.min(
+      totalPages,
+      startPage + maxButtons - 1
+    );
 
-
-/* =========================================
-   ESCAPE HTML
-========================================= */
-
-function escapeHtml(value) {
-
-    return String(value)
-        .replace(
-            /[&<>"']/g,
-            function (character) {
-
-                const entities = {
-
-                    "&": "&amp;",
-                    "<": "&lt;",
-                    ">": "&gt;",
-                    '"': "&quot;",
-                    "'": "&#039;"
-
-                };
-
-                return entities[
-                    character
-                ];
-
-            }
-        );
-
-}
-
-
-/* =========================================
-   RENDER LISTINGS
-========================================= */
-
-function renderListings() {
-
-    const keyword =
-        state.keyword
-            .toLowerCase()
-            .trim();
-
-
-    let results =
-        listings.filter(
-            function (listing) {
-
-                const searchableText = (
-
-                    listing.name +
-                    " " +
-                    listing.city +
-                    " " +
-                    listing.category +
-                    " " +
-                    listing.description
-
-                ).toLowerCase();
-
-
-                const matchesKeyword =
-                    !keyword ||
-                    searchableText.includes(
-                        keyword
-                    );
-
-
-                const matchesCity =
-                    !state.city ||
-                    listing.city === state.city;
-
-
-                const matchesCategory =
-                    !state.category ||
-                    listing.category ===
-                    state.category;
-
-
-                return (
-                    matchesKeyword &&
-                    matchesCity &&
-                    matchesCategory
-                );
-
-            }
-        );
-
-
-    /* =====================================
-       SORT
-    ===================================== */
-
-    if (state.sort === "featured") {
-
-        results.sort(
-            function (a, b) {
-
-                return (
-                    Number(b.featured) -
-                    Number(a.featured)
-                );
-
-            }
-        );
-
+    if (endPage - startPage < maxButtons - 1) {
+      startPage = Math.max(
+        1,
+        endPage - maxButtons + 1
+      );
     }
 
+    for (let page = startPage; page <= endPage; page++) {
+      const pageButton = document.createElement("button");
 
-    if (state.sort === "newest") {
+      pageButton.className = "pagination-button";
 
-        results.sort(
-            function (a, b) {
+      if (page === state.page) {
+        pageButton.classList.add("active");
+      }
 
-                return b.newest -
-                    a.newest;
+      pageButton.textContent = page;
 
-            }
+      pageButton.addEventListener("click", () => {
+        state.page = page;
+
+        renderListings();
+
+        window.scrollTo({
+          top: listingGrid.offsetTop - 100,
+          behavior: "smooth"
+        });
+      });
+
+      wrapper.appendChild(pageButton);
+    }
+
+    const nextButton = document.createElement("button");
+
+    nextButton.className = "pagination-button";
+    nextButton.textContent = "Next";
+    nextButton.disabled = state.page === totalPages;
+
+    nextButton.addEventListener("click", () => {
+      if (state.page < totalPages) {
+        state.page++;
+        renderListings();
+
+        window.scrollTo({
+          top: listingGrid.offsetTop - 100,
+          behavior: "smooth"
+        });
+      }
+    });
+
+    wrapper.appendChild(nextButton);
+
+    pagination.appendChild(wrapper);
+  }
+
+  // --------------------------------------------------
+  // LISTING EVENTS
+  // --------------------------------------------------
+
+  function attachListingEvents() {
+    document.querySelectorAll(".view-profile").forEach((button) => {
+      button.addEventListener("click", () => {
+        const profileId = button.dataset.profileId;
+
+        showToast(
+          `Demo profile selected: ${profileId}`
         );
+      });
+    });
 
-    }
+    document.querySelectorAll(".contact-profile").forEach((button) => {
+      button.addEventListener("click", () => {
+        const profileId = button.dataset.profileId;
 
-
-    if (state.sort === "name") {
-
-        results.sort(
-            function (a, b) {
-
-                return a.name.localeCompare(
-                    b.name
-                );
-
-            }
+        showToast(
+          `Demo contact action: ${profileId}`
         );
+      });
+    });
+  }
 
-    }
+  // --------------------------------------------------
+  // ACTIVE FILTERS
+  // --------------------------------------------------
 
-
-    /* =====================================
-       EMPTY STATE
-    ===================================== */
-
-    if (results.length === 0) {
-
-        listingGrid.innerHTML = "";
-
-        emptyState.hidden = false;
-
-    }
-
-    else {
-
-        emptyState.hidden = true;
-
-    }
-
-
-    /* =====================================
-       CREATE LISTING CARDS
-    ===================================== */
-
-    listingGrid.innerHTML =
-        results.map(
-            function (listing) {
-
-                return `
-
-                    <article
-                        class="listing-card"
-                    >
-
-                        <div
-                            class="listing-photo"
-                        >
-
-                            <img
-                                src="${escapeHtml(
-                                    listing.image
-                                )}"
-                                alt="${escapeHtml(
-                                    listing.name
-                                )} profile"
-                                loading="lazy"
-                                onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';"
-                            >
-
-                            <div
-                                class="photo-placeholder"
-                                style="display:none"
-                            >
-                                Photo unavailable
-                            </div>
-
-
-                            ${
-                                listing.featured
-                                ?
-                                `
-                                <span
-                                    class="featured-badge"
-                                >
-                                    FEATURED
-                                </span>
-                                `
-                                :
-                                ""
-                            }
-
-                        </div>
-
-
-                        <div
-                            class="listing-body"
-                        >
-
-                            <div
-                                class="listing-top"
-                            >
-
-                                <h3>
-                                    ${escapeHtml(
-                                        listing.name
-                                    )}
-                                </h3>
-
-                                <span
-                                    class="listing-tag"
-                                >
-                                    ${escapeHtml(
-                                        listing.category
-                                    )}
-                                </span>
-
-                            </div>
-
-
-                            <div
-                                class="listing-meta"
-                            >
-
-                                ${escapeHtml(
-                                    listing.city
-                                )}
-                                , Australia
-                                • 18+
-
-                            </div>
-
-
-                            <p
-                                class="listing-description"
-                            >
-
-                                ${escapeHtml(
-                                    listing.description
-                                )}
-
-                            </p>
-
-
-                            <div
-                                class="listing-actions"
-                            >
-
-                                <button
-                                    type="button"
-                                    data-action="view"
-                                    data-id="${listing.id}"
-                                >
-                                    View
-                                </button>
-
-
-                                <button
-                                    type="button"
-                                    data-action="contact"
-                                    data-id="${listing.id}"
-                                >
-                                    Contact
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                `;
-
-            }
-        ).join("");
-
-
-    renderActiveFilters();
-
-}
-
-
-/* =========================================
-   ACTIVE FILTERS
-========================================= */
-
-function renderActiveFilters() {
+  function renderActiveFilters() {
+    if (!activeFilters) return;
 
     activeFilters.innerHTML = "";
 
-
-    const filters = [];
-
-
     if (state.keyword) {
+      addFilterTag(
+        `Search: ${state.keyword}`,
+        () => {
+          state.keyword = "";
 
-        filters.push(
-            "Search: " +
-            state.keyword
-        );
+          if (searchInput) {
+            searchInput.value = "";
+          }
 
+          state.page = 1;
+
+          renderActiveFilters();
+          renderListings();
+        }
+      );
     }
-
 
     if (state.city) {
+      addFilterTag(
+        `City: ${state.city}`,
+        () => {
+          state.city = "";
 
-        filters.push(
-            "City: " +
-            state.city
-        );
+          if (citySelect) {
+            citySelect.value = "";
+          }
 
+          state.page = 1;
+
+          renderActiveFilters();
+          renderListings();
+        }
+      );
     }
-
 
     if (state.category) {
+      addFilterTag(
+        `Category: ${state.category}`,
+        () => {
+          state.category = "";
 
-        filters.push(
-            "Category: " +
-            state.category
-        );
+          state.page = 1;
 
-    }
-
-
-    filters.forEach(
-        function (filter) {
-
-            const chip =
-                document.createElement(
-                    "span"
-                );
-
-            chip.className =
-                "filter-chip";
-
-            chip.textContent =
-                filter;
-
-            activeFilters.appendChild(
-                chip
-            );
-
+          renderActiveFilters();
+          renderListings();
         }
-    );
+      );
+    }
+  }
 
-}
+  function addFilterTag(label, removeFunction) {
+    const tag = document.createElement("button");
 
+    tag.className = "filter-tag";
+    tag.type = "button";
+    tag.textContent = `${label} ×`;
 
-/* =========================================
-   SEARCH
-========================================= */
+    tag.addEventListener("click", removeFunction);
 
-function performSearch() {
+    activeFilters.appendChild(tag);
+  }
 
-    state.keyword =
-        searchInput.value;
+  // --------------------------------------------------
+  // SEARCH
+  // --------------------------------------------------
 
-    state.city =
-        citySelect.value;
+  function performSearch() {
+    state.keyword = searchInput
+      ? searchInput.value.trim()
+      : "";
 
+    state.city = citySelect
+      ? citySelect.value
+      : "";
 
+    state.page = 1;
+
+    renderActiveFilters();
     renderListings();
+  }
 
-
-    document
-        .getElementById("listings")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
-
-}
-
-
-if (searchButton) {
-
+  if (searchButton) {
     searchButton.addEventListener(
-        "click",
-        performSearch
+      "click",
+      performSearch
     );
-
-}
-
-
-/* ENTER KEY SEARCH */
-
-if (searchInput) {
-
-    searchInput.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key ===
-                "Enter"
-            ) {
-
-                performSearch();
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   CITY FILTER
-========================================= */
-
-document
-    .querySelectorAll(
-        "[data-city]"
-    )
-    .forEach(
-        function (button) {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    const city =
-                        button.dataset.city;
-
-
-                    state.city =
-                        city;
-
-                    citySelect.value =
-                        city;
-
-
-                    renderListings();
-
-
-                    document
-                        .getElementById(
-                            "listings"
-                        )
-                        .scrollIntoView({
-                            behavior:
-                                "smooth"
-                        });
-
-                }
-            );
-
-        }
-    );
-
-
-/* =========================================
-   CATEGORY FILTER
-========================================= */
-
-document
-    .querySelectorAll(
-        "[data-category]"
-    )
-    .forEach(
-        function (button) {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    document
-                        .querySelectorAll(
-                            ".category-card"
-                        )
-                        .forEach(
-                            function (card) {
-
-                                card.classList.remove(
-                                    "active"
-                                );
-
-                            }
-                        );
-
-
-                    button.classList.add(
-                        "active"
-                    );
-
-
-                    state.category =
-                        button.dataset.category;
-
-
-                    renderListings();
-
-
-                    document
-                        .getElementById(
-                            "listings"
-                        )
-                        .scrollIntoView({
-                            behavior:
-                                "smooth"
-                        });
-
-                }
-            );
-
-        }
-    );
-
-
-/* =========================================
-   SORT
-========================================= */
-
-if (sortSelect) {
-
-    sortSelect.addEventListener(
-        "change",
-        function () {
-
-            state.sort =
-                sortSelect.value;
-
-            renderListings();
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   CLEAR FILTERS
-========================================= */
-
-if (clearFilters) {
-
-    clearFilters.addEventListener(
-        "click",
-        function () {
-
-            state.keyword = "";
-
-            state.city = "";
-
-            state.category = "";
-
-            state.sort = "featured";
-
-
-            searchInput.value = "";
-
-            citySelect.value = "";
-
-            sortSelect.value =
-                "featured";
-
-
-            document
-                .querySelectorAll(
-                    ".category-card"
-                )
-                .forEach(
-                    function (card) {
-
-                        card.classList.remove(
-                            "active"
-                        );
-
-                    }
-                );
-
-
-            renderListings();
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   LISTING BUTTONS
-========================================= */
-
-listingGrid.addEventListener(
-    "click",
-    function (event) {
-
-        const button =
-            event.target.closest(
-                "button"
-            );
-
-
-        if (!button) {
-            return;
-        }
-
-
-        const id =
-            Number(
-                button.dataset.id
-            );
-
-
-        const listing =
-            listings.find(
-                function (item) {
-
-                    return item.id === id;
-
-                }
-            );
-
-
-        if (!listing) {
-            return;
-        }
-
-
-        if (
-            button.dataset.action ===
-            "view"
-        ) {
-
-            showToast(
-                "Demo profile: " +
-                listing.name
-            );
-
-        }
-
-
-        if (
-            button.dataset.action ===
-            "contact"
-        ) {
-
-            showToast(
-                "Demo contact flow: " +
-                listing.name
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================
-   POST LISTING
-========================================= */
-
-if (postListingButton) {
-
-    postListingButton.addEventListener(
-        "click",
-        function () {
-
-            showToast(
-                "Registration and listing submission will be connected here."
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   MOBILE MENU
-========================================= */
-
-if (mobileMenuButton) {
-
-    mobileMenuButton.addEventListener(
-        "click",
-        function () {
-
-            mainNavigation.classList.toggle(
-                "open"
-            );
-
-        }
-    );
-
-}
-
-
-/* CLOSE MOBILE MENU
-   AFTER CLICKING A LINK
-========================================= */
-
-document
-    .querySelectorAll(
-        "#mainNavigation a"
-    )
-    .forEach(
-        function (link) {
-
-            link.addEventListener(
-                "click",
-                function () {
-
-                    mainNavigation.classList.remove(
-                        "open"
-                    );
-
-                }
-            );
-
-        }
-    );
-
-
-/* =========================================
-   TOAST MESSAGE
-========================================= */
-
-let toastTimer;
-
-
-function showToast(message) {
-
-    toast.textContent =
-        message;
-
-
-    toast.classList.add(
-        "show"
-    );
-
-
-    clearTimeout(
-        toastTimer
-    );
-
-
-    toastTimer =
-        setTimeout(
-            function () {
-
-                toast.classList.remove(
-                    "show"
-                );
-
-            },
-            2500
-        );
-
-}
-
-
-/* =========================================
-   INITIAL RENDER
-========================================= */
-
-renderListings();
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        performSearch();
+      }
+    });
+  }
+
+  if (citySelect) {
+    citySelect.addEventListener("change", () => {
+      state.city = citySelect.value;
+      state.page = 1;
+
+      renderActiveFilters();
+      renderListings();
+    });
+  }
+
+  // --------------------------------------------------
+  // CATEGORY FILTER
+  // --------------------------------------------------
+
+  document.querySelectorAll("[data-category]").forEach((element) => {
+    element.addEventListener("click", () => {
+      const category = element.dataset.category;
+
+      state.category =
+        state.category === category
+          ? ""
+          : category;
+
+      state.page = 1;
+
+      renderActiveFilters();
+      renderListings();
+    });
+  });
+
+  // --------------------------------------------------
+  // CITY FILTER
+  // --------------------------------------------------
+
+  document.querySelectorAll("[data-city]").forEach((element) => {
+    element.addEventListener("click", () => {
+      const city = element.dataset.city;
+
+      state.city =
+        state.city === city
+          ? ""
+          : city;
+
+      if (citySelect) {
+        citySelect.value = state.city;
+      }
+
+      state.page = 1;
+
+      renderActiveFilters();
+      renderListings();
+    });
+  });
+
+  // --------------------------------------------------
+  // SORT
+  // --------------------------------------------------
+
+  if (sortSelect) {
+    sortSelect.addEventListener("change", () => {
+      state.sort = sortSelect.value;
+      state.page = 1;
+
+      renderListings();
+    });
+  }
+
+  // --------------------------------------------------
+  // CLEAR FILTERS
+  // --------------------------------------------------
+
+  if (clearFiltersButton) {
+    clearFiltersButton.addEventListener("click", () => {
+      state.keyword = "";
+      state.city = "";
+      state.category = "";
+      state.page = 1;
+
+      if (searchInput) {
+        searchInput.value = "";
+      }
+
+      if (citySelect) {
+        citySelect.value = "";
+      }
+
+      renderActiveFilters();
+      renderListings();
+    });
+  }
+
+  // --------------------------------------------------
+  // POST LISTING
+  // --------------------------------------------------
+
+  if (postListingButton) {
+    postListingButton.addEventListener("click", () => {
+      showToast(
+        "Demo mode: listing submission will be connected to the backend later."
+      );
+    });
+  }
+
+  // --------------------------------------------------
+  // MOBILE MENU
+  // --------------------------------------------------
+
+  if (mobileMenuButton && mainNavigation) {
+    mobileMenuButton.addEventListener("click", () => {
+      mainNavigation.classList.toggle("mobile-open");
+    });
+  }
+
+  // --------------------------------------------------
+  // TOAST
+  // --------------------------------------------------
+
+  function showToast(message) {
+    if (!toast) return;
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
+  }
+
+  // --------------------------------------------------
+  // INITIALIZE
+  // --------------------------------------------------
+
+  checkAgeGate();
+  renderActiveFilters();
+  renderListings();
+
+  console.log(
+    `AfterDark AU demo loaded: ${listings.length} profiles`
+  );
+});
