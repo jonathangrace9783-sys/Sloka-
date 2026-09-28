@@ -1353,3 +1353,454 @@ a {
     }
 
       }
+/* ==================================================
+   PROFILE CARD ENHANCEMENTS
+   ================================================== */
+
+.listing-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.listing-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.28);
+}
+
+
+/* ==================================================
+   PROFILE IMAGE
+   ================================================== */
+
+.listing-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--surface-light);
+}
+
+.listing-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.listing-card:hover .listing-photo img {
+  transform: scale(1.04);
+}
+
+
+/* ==================================================
+   FEATURED BADGE
+   ================================================== */
+
+.featured-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  background: var(--accent);
+  color: #fff;
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+
+/* ==================================================
+   ONLINE BADGE
+   ================================================== */
+
+.online-badge {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  background: rgba(15, 15, 15, 0.82);
+  color: #fff;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  backdrop-filter: blur(6px);
+}
+
+/* Green online indicator */
+
+.online-badge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #35d07f;
+
+  box-shadow: 0 0 0 3px rgba(53, 208, 127, 0.12);
+}
+
+
+/* ==================================================
+   PROFILE BODY
+   ================================================== */
+
+.listing-body {
+  padding: 16px;
+}
+
+.listing-title-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  margin-bottom: 5px;
+}
+
+.listing-title-row h3 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 18px;
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+
+/* ==================================================
+   VERIFIED BADGE
+   ================================================== */
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 19px;
+  height: 19px;
+
+  flex: 0 0 19px;
+
+  border-radius: 50%;
+
+  background: #278cff;
+  color: #fff;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  box-shadow: 0 2px 7px rgba(39, 140, 255, 0.3);
+}
+
+
+/* ==================================================
+   LOCATION
+   ================================================== */
+
+.listing-location {
+  margin: 0 0 7px;
+
+  color: var(--muted);
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* ==================================================
+   CATEGORY
+   ================================================== */
+
+.listing-category {
+  display: inline-block;
+
+  margin: 0 0 10px;
+
+  padding: 5px 9px;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+
+  color: var(--accent);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+
+/* ==================================================
+   DESCRIPTION
+   ================================================== */
+
+.listing-description {
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 13px;
+  line-height: 1.55;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+
+  min-height: 40px;
+}
+
+
+/* ==================================================
+   LISTING ACTIONS
+   ================================================== */
+
+.listing-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+
+  margin-top: 16px;
+}
+
+.listing-actions .btn {
+  min-height: 40px;
+
+  border-radius: 9px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    background 0.2s ease;
+}
+
+.listing-actions .btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.listing-actions .btn:active {
+  transform: translateY(0);
+}
+
+
+/* ==================================================
+   PAGINATION
+   ================================================== */
+
+#pagination {
+  width: 100%;
+  margin-top: 32px;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  width: 100%;
+}
+
+.pagination-button {
+  min-width: 40px;
+  height: 40px;
+
+  padding: 0 12px;
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+
+  background: var(--surface);
+  color: var(--text);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+
+  transform: translateY(-1px);
+}
+
+.pagination-button.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.pagination-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
+/* ==================================================
+   FILTER TAGS
+   ================================================== */
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+
+  margin: 5px 5px 0 0;
+  padding: 7px 11px;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+
+  background: var(--surface);
+
+  color: var(--text);
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.filter-tag:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+
+/* ==================================================
+   EMPTY STATE
+   ================================================== */
+
+#emptyState {
+  padding: 45px 20px;
+
+  text-align: center;
+
+  color: var(--muted);
+}
+
+
+/* ==================================================
+   MOBILE
+   ================================================== */
+
+@media (max-width: 760px) {
+
+  .listing-card {
+    border-radius: 13px;
+  }
+
+  .listing-body {
+    padding: 14px;
+  }
+
+  .listing-title-row h3 {
+    font-size: 16px;
+  }
+
+  .listing-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .pagination-wrapper {
+    gap: 6px;
+  }
+
+  .pagination-button {
+    min-width: 37px;
+    height: 37px;
+
+    padding: 0 9px;
+
+    font-size: 12px;
+  }
+}
+
+
+/* ==================================================
+   SMALL MOBILE
+   ================================================== */
+
+@media (max-width: 480px) {
+
+  .listing-photo {
+    aspect-ratio: 1 / 1.15;
+  }
+
+  .featured-badge,
+  .online-badge {
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+
+  .online-badge {
+    right: 8px;
+    bottom: 8px;
+  }
+
+  .featured-badge {
+    top: 8px;
+    left: 8px;
+  }
+
+  .listing-description {
+    font-size: 12px;
+  }
+
+  .pagination-button {
+    min-width: 34px;
+    height: 34px;
+  }
+    }
