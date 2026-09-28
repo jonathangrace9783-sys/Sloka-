@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Profile details - AfterDark AU"
+  >
+
+  <title>Profile | AfterDark AU</title>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* =========================================
+       PROFILE PAGE
+       ========================================= */
+
+    .profile-page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 40px 20px 70px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      margin-bottom: 24px;
+
+      color: var(--muted);
+      text-decoration: none;
+
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+    }
+
+    .profile-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 30px;
+      align-items: start;
+    }
+
+    /* Gallery */
+
+    .profile-gallery {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .main-profile-image {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      background: var(--surface-light);
+      overflow: hidden;
+    }
+
+    .main-profile-image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .profile-thumbnails {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      padding: 10px;
+    }
+
+    .profile-thumbnail {
+      border: 2px solid transparent;
+      border-radius: 8px;
+      padding: 0;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      background: var(--surface-light);
+      cursor: pointer;
+    }
+
+    .profile-thumbnail.active {
+      border-color: var(--accent);
+    }
+
+    .profile-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Info */
+
+    .profile-info {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px;
+    }
+
+    .profile-status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .profile-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 6px 10px;
+
+      border-radius: 999px;
+
+      background: var(--surface-light);
+      color: var(--muted);
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .profile-status.online {
+      color: #35d07f;
+    }
+
+    .profile-status.verified {
+      color: #278cff;
+    }
+
+    .profile-info h1 {
+      margin: 0 0 8px;
+
+      color: var(--text);
+
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.1;
+    }
+
+    .profile-location {
+      margin: 0 0 18px;
+
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .profile-category {
+      display: inline-block;
+
+      margin-bottom: 22px;
+      padding: 7px 11px;
+
+      border: 1px solid var(--border);
+      border-radius: 999px;
+
+      color: var(--accent);
+
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .profile-description {
+      padding-top: 20px;
+
+      border-top: 1px solid var(--border);
+
+      color: var(--muted);
+
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .profile-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+
+      margin-top: 24px;
+    }
+
+    .meta-item {
+      padding: 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 10px;
+
+      background: var(--surface-light);
+    }
+
+    .meta-label {
+      display: block;
+
+      margin-bottom: 4px;
+
+      color: var(--muted);
+
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .meta-value {
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .profile-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+
+      margin-top: 24px;
+    }
+
+    .profile-actions button,
+    .profile-actions a {
+      min-height: 46px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 10px;
+
+      text-decoration: none;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+    .profile-error {
+      max-width: 650px;
+      margin: 80px auto;
+
+      padding: 40px 20px;
+
+      text-align: center;
+
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .profile-error h1 {
+      margin-top: 0;
+    }
+
+    /* Mobile */
+
+    @media (max-width: 800px) {
+      .profile-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-info {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .profile-page {
+        padding: 25px 14px 50px;
+      }
+
+      .profile-thumbnails {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .profile-meta {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="profile-page">
+
+    <a
+      href="index.html"
+      class="back-link"
+    >
+      ← Back to listings
+    </a>
+
+    <div id="profileContainer">
+      <!-- Profile will be loaded by JavaScript -->
+    </div>
+
+  </main>
+
+
+  <!-- Demo profile data -->
+  <script src="js/seed-data.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      const container =
+        document.getElementById("profileContainer");
+
+      const profiles =
+        Array.isArray(window.afterdarkDemoProfiles)
+          ? window.afterdarkDemoProfiles
+          : [];
+
+      /* -----------------------------------------
+         Get profile ID from URL
+         Example:
+         profile.html?id=profile-0001
+         ----------------------------------------- */
+
+      const params =
+        new URLSearchParams(window.location.search);
+
+      const profileId =
+        params.get("id");
+
+      const profile =
+        profiles.find(
+          item => String(item.id) === String(profileId)
+        );
+
+      /* -----------------------------------------
+         Profile not found
+         ----------------------------------------- */
+
+      if (!profile) {
+
+        container.innerHTML = `
+          <div class="profile-error">
+
+            <h1>Profile not found</h1>
+
+            <p>
+              The profile you are looking for
+              could not be found.
+            </p>
+
+            <a
+              href="index.html"
+              class="btn btn-primary"
+            >
+              Back to Listings
+            </a>
+
+          </div>
+        `;
+
+        return;
+      }
+
+      /* -----------------------------------------
+         Profile images
+         ----------------------------------------- */
+
+      const photos =
+        Array.isArray(profile.photos)
+          ? profile.photos
+          : [];
+
+      const firstPhoto =
+        photos.length > 0 && photos[0].src
+          ? photos[0].src
+          : "assets/images/profiles/placeholder.jpg";
+
+
+      /* -----------------------------------------
+         Gallery HTML
+         ----------------------------------------- */
+
+      const thumbnails = photos
+        .slice(0, 10)
+        .map((photo, index) => {
+
+          const src =
+            photo.src ||
+            "assets/images/profiles/placeholder.jpg";
+
+          return `
+            <button
+              type="button"
+              class="profile-thumbnail ${
+                index === 0 ? "active" : ""
+              }"
+              data-image="${escapeHtml(src)}"
+              aria-label="View photo ${index + 1}"
+            >
+              <img
+                src="${escapeHtml(src)}"
+                alt="Profile photo ${index + 1}"
+                loading="lazy"
+                onerror="this.src='assets/images/profiles/placeholder.jpg'"
+              >
+            </button>
+          `;
+        })
+        .join("");
+
+
+      /* -----------------------------------------
+         Status badges
+         ----------------------------------------- */
+
+      const onlineBadge =
+        profile.online
+          ? `
+            <span class="profile-status online">
+              ● Online
+            </span>
+          `
+          : "";
+
+      const verifiedBadge =
+        profile.verified
+          ? `
+            <span class="profile-status verified">
+              ✓ Verified
+            </span>
+          `
+          : "";
+
+      const featuredBadge =
+        profile.featured
+          ? `
+            <span class="profile-status">
+              ★ Featured
+            </span>
+          `
+          : "";
+
+
+      /* -----------------------------------------
+         Main profile
+         ----------------------------------------- */
+
+      container.innerHTML = `
+
+        <section class="profile-layout">
+
+          <!-- Gallery -->
+
+          <div class="profile-gallery">
+
+            <div class="main-profile-image">
+
+              <img
+                id="mainProfileImage"
+                src="${escapeHtml(firstPhoto)}"
+                alt="${escapeHtml(profile.displayName)}"
+                onerror="this.src='assets/images/profiles/placeholder.jpg'"
+              >
+
+            </div>
+
+            <div class="profile-thumbnails">
+
+              ${thumbnails}
+
+            </div>
+
+          </div>
+
+
+          <!-- Information -->
+
+          <article class="profile-info">
+
+            <div class="profile-status-row">
+
+              ${onlineBadge}
+              ${verifiedBadge}
+              ${featuredBadge}
+
+            </div>
+
+
+            <h1>
+              ${escapeHtml(profile.displayName)}
+            </h1>
+
+
+            <p class="profile-location">
+              📍 ${escapeHtml(profile.city)},
+              ${escapeHtml(profile.state)},
+              ${escapeHtml(profile.country)}
+            </p>
+
+
+            <span class="profile-category">
+              ${escapeHtml(profile.category)}
+            </span>
+
+
+            <div class="profile-description">
+
+              <p>
+                ${escapeHtml(profile.description)}
+              </p>
+
+            </div>
+
+
+            <div class="profile-meta">
+
+              <div class="meta-item">
+
+                <span class="meta-label">
+                  Age
+                </span>
+
+                <span class="meta-value">
+                  ${escapeHtml(profile.age)}
+                </span>
+
+              </div>
+
+
+              <div class="meta-item">
+
+                <span class="meta-label">
+                  Location
+                </span>
+
+                <span class="meta-value">
+                  ${escapeHtml(profile.city)}
+                </span>
+
+              </div>
+
+
+              <div class="meta-item">
+
+                <span class="meta-label">
+                  Category
+                </span>
+
+                <span class="meta-value">
+                  ${escapeHtml(profile.category)}
+                </span>
+
+              </div>
+
+
+              <div class="meta-item">
+
+                <span class="meta-label">
+                  Profile ID
+                </span>
+
+                <span class="meta-value">
+                  ${escapeHtml(profile.id)}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="profile-actions">
+
+              <button
+                type="button"
+                id="contactButton"
+                class="btn btn-primary"
+              >
+                Contact
+              </button>
+
+              <a
+                href="index.html"
+                class="btn btn-secondary"
+              >
+                Back
+              </a>
+
+            </div>
+
+          </article>
+
+        </section>
+
+      `;
+
+
+      /* -----------------------------------------
+         Thumbnail switching
+         ----------------------------------------- */
+
+      const mainImage =
+        document.getElementById("mainProfileImage");
+
+      document
+        .querySelectorAll(".profile-thumbnail")
+        .forEach(button => {
+
+          button.addEventListener("click", () => {
+
+            const image =
+              button.dataset.image;
+
+            if (mainImage) {
+              mainImage.src = image;
+            }
+
+            document
+              .querySelectorAll(".profile-thumbnail")
+              .forEach(item => {
+                item.classList.remove("active");
+              });
+
+            button.classList.add("active");
+
+          });
+
+        });
+
+
+      /* -----------------------------------------
+         Contact demo button
+         ----------------------------------------- */
+
+      const contactButton =
+        document.getElementById("contactButton");
+
+      if (contactButton) {
+
+        contactButton.addEventListener("click", () => {
+
+          alert(
+            "Contact functionality will be connected to the backend later."
+          );
+
+        });
+
+      }
+
+    });
+
+
+    /* -------------------------------------------
+       HTML escaping
+       ------------------------------------------- */
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+  </script>
+
+</body>
+</html>
