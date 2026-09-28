@@ -1,19 +1,101 @@
-// js/app.js
+document.addEventListener("DOMContentLoaded", function () {
 
-document.addEventListener("DOMContentLoaded", () => {
+  // =========================
+  // AGE GATE
+  // =========================
 
-  // ==================================================
-  // DATA
-  // ==================================================
+  const ageGate = document.getElementById("ageGate");
+  const enterWebsite = document.getElementById("enterWebsite");
+  const leaveWebsite = document.getElementById("leaveWebsite");
 
-  const listings = Array.isArray(window.afterdarkDemoProfiles)
+  function hideAgeGate() {
+    if (ageGate) {
+      ageGate.style.display = "none";
+    }
+  }
+
+  function showAgeGate() {
+    if (ageGate) {
+      ageGate.style.display = "flex";
+    }
+  }
+
+  // Check previous verification
+  try {
+    if (localStorage.getItem("afterdarkAgeVerified") === "true") {
+      hideAgeGate();
+    } else {
+      showAgeGate();
+    }
+  } catch (error) {
+    showAgeGate();
+  }
+
+  // Enter website
+  if (enterWebsite) {
+    enterWebsite.addEventListener("click", function () {
+
+      try {
+        localStorage.setItem("afterdarkAgeVerified", "true");
+      } catch (error) {
+        // Continue even if localStorage is unavailable
+      }
+
+      hideAgeGate();
+    });
+  }
+
+  // Leave website
+  if (leaveWebsite) {
+    leaveWebsite.addEventListener("click", function () {
+      window.location.href = "https://www.google.com/";
+    });
+  }
+
+
+  // =========================
+  // DEMO DATA
+  // =========================
+
+  const profiles = Array.isArray(window.afterdarkDemoProfiles)
     ? window.afterdarkDemoProfiles
     : [];
 
+  console.log("Profiles loaded:", profiles.length);
 
-  // ==================================================
+
+  // =========================
+  // ELEMENTS
+  // =========================
+
+  const listingGrid = document.getElementById("listingGrid");
+  const emptyState = document.getElementById("emptyState");
+  const pagination = document.getElementById("pagination");
+
+  const searchInput = document.getElementById("searchInput");
+  const citySelect = document.getElementById("citySelect");
+  const searchButton = document.getElementById("searchButton");
+  const sortSelect = document.getElementById("sortSelect");
+
+  const activeFilters = document.getElementById("activeFilters");
+  const clearFilters = document.getElementById("clearFilters");
+
+  const mobileMenuButton = document.getElementById("mobileMenuButton");
+  const mainNavigation = document.getElementById("mainNavigation");
+
+  const postListingButton =
+    document.getElementById("postListingButton");
+
+  const categoryButtons =
+    document.querySelectorAll("[data-category]");
+
+  const cityButtons =
+    document.querySelectorAll("[data-city]");
+
+
+  // =========================
   // STATE
-  // ==================================================
+  // =========================
 
   const state = {
     keyword: "",
@@ -25,492 +107,249 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
 
-  // ==================================================
-  // DOM ELEMENTS
-  // ==================================================
-
-  const ageGate =
-    document.getElementById("ageGate");
-
-  const enterWebsite =
-    document.getElementById("enterWebsite");
-
-  const leaveWebsite =
-    document.getElementById("leaveWebsite");
-
-  const searchInput =
-    document.getElementById("searchInput");
-
-  const citySelect =
-    document.getElementById("citySelect");
-
-  const searchButton =
-    document.getElementById("searchButton");
-
-  const listingGrid =
-    document.getElementById("listingGrid");
-
-  const emptyState =
-    document.getElementById("emptyState");
-
-  const clearFiltersButton =
-    document.getElementById("clearFilters");
-
-  const sortSelect =
-    document.getElementById("sortSelect");
-
-  const activeFilters =
-    document.getElementById("activeFilters");
-
-  const mobileMenuButton =
-    document.getElementById("mobileMenuButton");
-
-  const mainNavigation =
-    document.getElementById("mainNavigation");
-
-  const postListingButton =
-    document.getElementById("postListingButton");
-
-  const toast =
-    document.getElementById("toast");
-
-
-  // ==================================================
-  // AGE GATE
-  // ==================================================
-
-  function checkAgeGate() {
-
-    const ageVerified =
-      localStorage.getItem(
-        "afterdarkAgeVerified"
-      );
-
-    if (ageVerified === "true") {
-
-      if (ageGate) {
-        ageGate.style.display = "none";
-      }
-
-    } else {
-
-      if (ageGate) {
-        ageGate.style.display = "flex";
-      }
-
-    }
-  }
-
-
-  if (enterWebsite) {
-
-    enterWebsite.addEventListener(
-      "click",
-      () => {
-
-        localStorage.setItem(
-          "afterdarkAgeVerified",
-          "true"
-        );
-
-        if (ageGate) {
-          ageGate.style.display = "none";
-        }
-
-      }
-    );
-
-  }
-
-
-  if (leaveWebsite) {
-
-    leaveWebsite.addEventListener(
-      "click",
-      () => {
-
-        window.location.href =
-          "https://www.google.com/";
-
-      }
-    );
-
-  }
-
-
-  // ==================================================
-  // ESCAPE HTML
-  // ==================================================
+  // =========================
+  // HELPERS
+  // =========================
 
   function escapeHtml(value) {
-
     return String(value ?? "")
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
-
   }
 
-
-  // ==================================================
-  // GET PROFILE IMAGE
-  // ==================================================
 
   function getProfileImage(profile) {
 
     if (
       profile &&
       Array.isArray(profile.photos) &&
-      profile.photos.length > 0 &&
-      profile.photos[0] &&
-      profile.photos[0].src
+      profile.photos.length > 0
     ) {
-
-      return profile.photos[0].src;
-
+      return profile.photos[0];
     }
 
     return "assets/images/profiles/placeholder.jpg";
   }
 
 
-  // ==================================================
-  // FILTER PROFILES
-  // ==================================================
+  function getFilteredProfiles() {
 
-  function getFilteredListings() {
+    let result = profiles.filter(function (profile) {
 
-    let result = [...listings];
+      const keyword = state.keyword.toLowerCase().trim();
+
+      const matchesKeyword =
+        !keyword ||
+        String(profile.displayName || "")
+          .toLowerCase()
+          .includes(keyword) ||
+        String(profile.username || "")
+          .toLowerCase()
+          .includes(keyword) ||
+        String(profile.city || "")
+          .toLowerCase()
+          .includes(keyword) ||
+        String(profile.category || "")
+          .toLowerCase()
+          .includes(keyword);
+
+      const matchesCity =
+        !state.city ||
+        profile.city === state.city;
+
+      const matchesCategory =
+        !state.category ||
+        profile.category === state.category;
+
+      return (
+        matchesKeyword &&
+        matchesCity &&
+        matchesCategory
+      );
+    });
 
 
-    // ----------------------------------------------
-    // Keyword
-    // ----------------------------------------------
+    // Sorting
+    if (state.sort === "name") {
 
-    if (state.keyword) {
-
-      const keyword =
-        state.keyword.toLowerCase();
-
-      result = result.filter((profile) => {
-
-        const text = [
-
-          profile.displayName,
-          profile.username,
-          profile.city,
-          profile.state,
-          profile.category,
-          profile.description
-
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-
-        return text.includes(keyword);
-
+      result.sort(function (a, b) {
+        return String(a.displayName)
+          .localeCompare(String(b.displayName));
       });
 
+    } else if (state.sort === "newest") {
+
+      result.sort(function (a, b) {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
+    } else {
+
+      result.sort(function (a, b) {
+
+        if (Boolean(b.featured) !== Boolean(a.featured)) {
+          return b.featured ? 1 : -1;
+        }
+
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
     }
-
-
-    // ----------------------------------------------
-    // City
-    // ----------------------------------------------
-
-    if (state.city) {
-
-      result = result.filter(
-        profile =>
-          profile.city === state.city
-      );
-
-    }
-
-
-    // ----------------------------------------------
-    // Category
-    // ----------------------------------------------
-
-    if (state.category) {
-
-      result = result.filter(
-        profile =>
-          profile.category === state.category
-      );
-
-    }
-
-
-    // ----------------------------------------------
-    // Sorting
-    // ----------------------------------------------
-
-    switch (state.sort) {
-
-      case "featured":
-
-        result.sort((a, b) => {
-
-          return (
-            Number(Boolean(b.featured)) -
-            Number(Boolean(a.featured))
-          );
-
-        });
-
-        break;
-
-
-      case "newest":
-
-        result.sort((a, b) => {
-
-          return (
-            new Date(b.createdAt) -
-            new Date(a.createdAt)
-          );
-
-        });
-
-        break;
-
-
-      case "name":
-
-        result.sort((a, b) => {
-
-          return String(
-            a.displayName || ""
-          ).localeCompare(
-            String(b.displayName || "")
-          );
-
-        });
-
-        break;
-
-
-      default:
-        break;
-
-    }
-
 
     return result;
-
   }
 
 
-  // ==================================================
+  // =========================
   // RENDER LISTINGS
-  // ==================================================
+  // =========================
 
   function renderListings() {
 
-    if (!listingGrid) {
-      return;
-    }
+    if (!listingGrid) return;
 
+    const result = getFilteredProfiles();
 
-    const filtered =
-      getFilteredListings();
-
-
-    const totalPages =
-      Math.max(
-        1,
-        Math.ceil(
-          filtered.length /
-          state.pageSize
-        )
-      );
-
+    const totalPages = Math.max(
+      1,
+      Math.ceil(result.length / state.pageSize)
+    );
 
     if (state.page > totalPages) {
       state.page = totalPages;
     }
 
-
     const start =
-      (state.page - 1) *
-      state.pageSize;
+      (state.page - 1) * state.pageSize;
 
-
-    const end =
-      start +
-      state.pageSize;
-
-
-    const visibleListings =
-      filtered.slice(start, end);
+    const pageItems =
+      result.slice(
+        start,
+        start + state.pageSize
+      );
 
 
     listingGrid.innerHTML = "";
 
 
-    // ----------------------------------------------
-    // Empty state
-    // ----------------------------------------------
-
-    if (visibleListings.length === 0) {
+    if (pageItems.length === 0) {
 
       if (emptyState) {
-        emptyState.style.display = "block";
+        emptyState.hidden = false;
       }
 
-      renderPagination(0);
+      if (pagination) {
+        pagination.innerHTML = "";
+      }
 
       return;
     }
 
 
     if (emptyState) {
-      emptyState.style.display = "none";
+      emptyState.hidden = true;
     }
 
 
-    // ----------------------------------------------
-    // Create cards
-    // ----------------------------------------------
-
-    visibleListings.forEach((profile) => {
+    pageItems.forEach(function (profile) {
 
       const card =
         document.createElement("article");
 
-
-      card.className =
-        "listing-card";
+      card.className = "listing-card";
 
 
       const image =
-        getProfileImage(profile);
+        escapeHtml(getProfileImage(profile));
 
+      const name =
+        escapeHtml(profile.displayName);
 
-      const featuredBadge =
-        profile.featured
-          ? `
-            <span class="featured-badge">
-              Featured
-            </span>
-          `
-          : "";
+      const city =
+        escapeHtml(profile.city);
 
+      const stateName =
+        escapeHtml(profile.state);
 
-      const onlineBadge =
-        profile.online
-          ? `
-            <span class="online-badge">
-              Online
-            </span>
-          `
-          : "";
+      const category =
+        escapeHtml(profile.category);
 
-
-      const verifiedBadge =
-        profile.verified
-          ? `
-            <span
-              class="verified-badge"
-              title="Verified profile"
-            >
-              ✓
-            </span>
-          `
-          : "";
+      const description =
+        escapeHtml(profile.description);
 
 
       card.innerHTML = `
-
         <div class="listing-photo">
 
           <img
-            src="${escapeHtml(image)}"
-            alt="${escapeHtml(
-              profile.displayName || "Profile"
-            )}"
+            src="${image}"
+            alt="${name}"
             loading="lazy"
-            onerror="
-              this.src='assets/images/profiles/placeholder.jpg'
-            "
+            onerror="this.onerror=null;this.src='assets/images/profiles/placeholder.jpg';"
           >
 
-          ${featuredBadge}
+          ${
+            profile.featured
+              ? `<span class="featured-badge">Featured</span>`
+              : ""
+          }
 
-          ${onlineBadge}
+          ${
+            profile.online
+              ? `<span class="online-badge">
+                   <span></span> Online
+                 </span>`
+              : ""
+          }
 
         </div>
-
 
         <div class="listing-body">
 
           <div class="listing-title-row">
 
-            <h3>
-              ${escapeHtml(
-                profile.displayName
-              )}
+            <h3 class="listing-title">
+              ${name}
             </h3>
 
-            ${verifiedBadge}
+            ${
+              profile.verified
+                ? `<span class="verified-badge">
+                     ✓ Verified
+                   </span>`
+                : ""
+            }
 
           </div>
 
+          <div class="listing-location">
+            ${city}, ${stateName}
+          </div>
 
-          <p class="listing-location">
-
-            ${escapeHtml(
-              profile.city
-            )},
-
-            ${escapeHtml(
-              profile.state
-            )}
-
-          </p>
-
-
-          <p class="listing-category">
-
-            ${escapeHtml(
-              profile.category
-            )}
-
-          </p>
-
+          <div class="listing-category">
+            ${category}
+          </div>
 
           <p class="listing-description">
-
-            ${escapeHtml(
-              profile.description
-            )}
-
+            ${description}
           </p>
-
 
           <div class="listing-actions">
 
             <button
               type="button"
-              class="btn btn-primary view-profile"
-              data-profile-id="${escapeHtml(
-                profile.id
-              )}"
+              class="btn btn-primary view-profile-button"
+              data-profile-id="${escapeHtml(profile.id)}"
             >
               View Profile
             </button>
 
-
             <button
               type="button"
-              class="btn btn-secondary contact-profile"
-              data-profile-id="${escapeHtml(
-                profile.id
-              )}"
+              class="btn btn-secondary contact-button"
+              data-profile-id="${escapeHtml(profile.id)}"
             >
               Contact
             </button>
@@ -518,454 +357,203 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
         </div>
-
       `;
 
 
       listingGrid.appendChild(card);
-
     });
 
 
-    renderPagination(
-      filtered.length
-    );
+    // View profile buttons
+    document
+      .querySelectorAll(".view-profile-button")
+      .forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+          const id =
+            button.getAttribute("data-profile-id");
+
+          window.location.href =
+            "profile.html?id=" +
+            encodeURIComponent(id);
+        });
+      });
 
 
-    attachListingEvents();
+    // Contact buttons
+    document
+      .querySelectorAll(".contact-button")
+      .forEach(function (button) {
 
+        button.addEventListener("click", function () {
+
+          showToast(
+            "Contact functionality will be connected later."
+          );
+        });
+      });
+
+
+    renderPagination(totalPages);
   }
 
 
-  // ==================================================
+  // =========================
   // PAGINATION
-  // ==================================================
+  // =========================
 
-  function renderPagination(totalItems) {
+  function renderPagination(totalPages) {
 
-    let pagination =
-      document.getElementById(
-        "pagination"
-      );
-
-
-    if (!pagination) {
-
-      pagination =
-        document.createElement("div");
-
-      pagination.id =
-        "pagination";
-
-
-      if (
-        listingGrid &&
-        listingGrid.parentNode
-      ) {
-
-        listingGrid.parentNode.appendChild(
-          pagination
-        );
-
-      }
-
-    }
-
+    if (!pagination) return;
 
     pagination.innerHTML = "";
 
-
-    const totalPages =
-      Math.ceil(
-        totalItems /
-        state.pageSize
-      );
-
-
-    if (totalPages <= 1) {
-      return;
-    }
+    if (totalPages <= 1) return;
 
 
     const wrapper =
       document.createElement("div");
 
-
     wrapper.className =
-      "pagination-wrapper";
+      "pagination";
 
 
-    // ----------------------------------------------
-    // Previous
-    // ----------------------------------------------
-
-    const previousButton =
-      document.createElement("button");
-
-
-    previousButton.type =
-      "button";
-
-
-    previousButton.className =
-      "pagination-button";
-
-
-    previousButton.textContent =
-      "Previous";
-
-
-    previousButton.disabled =
-      state.page === 1;
-
-
-    previousButton.addEventListener(
-      "click",
-      () => {
-
-        if (state.page > 1) {
-
-          state.page--;
-
-          renderListings();
-
-          scrollToListings();
-
-        }
-
-      }
-    );
-
-
-    wrapper.appendChild(
-      previousButton
-    );
-
-
-    // ----------------------------------------------
-    // Page numbers
-    // ----------------------------------------------
-
-    const maxButtons = 7;
-
-
-    let startPage =
-      Math.max(
-        1,
-        state.page -
-          Math.floor(
-            maxButtons / 2
-          )
-      );
-
-
-    let endPage =
-      Math.min(
-        totalPages,
-        startPage +
-          maxButtons -
-          1
-      );
-
-
-    if (
-      endPage -
-      startPage <
-      maxButtons - 1
+    function addButton(
+      text,
+      page,
+      disabled
     ) {
 
-      startPage =
-        Math.max(
-          1,
-          endPage -
-            maxButtons +
-            1
-        );
+      const button =
+        document.createElement("button");
 
-    }
+      button.type = "button";
 
-
-    for (
-      let page = startPage;
-      page <= endPage;
-      page++
-    ) {
-
-      const pageButton =
-        document.createElement(
-          "button"
-        );
-
-
-      pageButton.type =
-        "button";
-
-
-      pageButton.className =
+      button.className =
         "pagination-button";
 
+      button.textContent = text;
 
-      pageButton.textContent =
-        page;
+      button.disabled = disabled;
 
-
-      if (page === state.page) {
-
-        pageButton.classList.add(
-          "active"
-        );
-
-      }
-
-
-      pageButton.addEventListener(
+      button.addEventListener(
         "click",
-        () => {
+        function () {
 
           state.page = page;
 
           renderListings();
 
-          scrollToListings();
-
+          window.scrollTo({
+            top: document.getElementById("listings")
+              ? document.getElementById("listings").offsetTop - 80
+              : 0,
+            behavior: "smooth"
+          });
         }
       );
 
+      wrapper.appendChild(button);
+    }
 
-      wrapper.appendChild(
-        pageButton
+
+    addButton(
+      "Previous",
+      state.page - 1,
+      state.page === 1
+    );
+
+
+    const start =
+      Math.max(1, state.page - 2);
+
+    const end =
+      Math.min(totalPages, state.page + 2);
+
+
+    for (
+      let page = start;
+      page <= end;
+      page++
+    ) {
+
+      addButton(
+        String(page),
+        page,
+        page === state.page
       );
-
     }
 
 
-    // ----------------------------------------------
-    // Next
-    // ----------------------------------------------
-
-    const nextButton =
-      document.createElement("button");
-
-
-    nextButton.type =
-      "button";
-
-
-    nextButton.className =
-      "pagination-button";
-
-
-    nextButton.textContent =
-      "Next";
-
-
-    nextButton.disabled =
-      state.page === totalPages;
-
-
-    nextButton.addEventListener(
-      "click",
-      () => {
-
-        if (
-          state.page <
-          totalPages
-        ) {
-
-          state.page++;
-
-          renderListings();
-
-          scrollToListings();
-
-        }
-
-      }
+    addButton(
+      "Next",
+      state.page + 1,
+      state.page === totalPages
     );
 
 
-    wrapper.appendChild(
-      nextButton
-    );
-
-
-    pagination.appendChild(
-      wrapper
-    );
-
+    pagination.appendChild(wrapper);
   }
 
 
-  // ==================================================
-  // SCROLL TO LISTINGS
-  // ==================================================
-
-  function scrollToListings() {
-
-    if (!listingGrid) {
-      return;
-    }
-
-
-    window.scrollTo({
-
-      top:
-        listingGrid.offsetTop - 100,
-
-      behavior:
-        "smooth"
-
-    });
-
-  }
-
-
-  // ==================================================
-  // LISTING BUTTON EVENTS
-  // ==================================================
-
-  function attachListingEvents() {
-
-
-    // ----------------------------------------------
-    // View Profile
-    // ----------------------------------------------
-
-    document
-      .querySelectorAll(
-        ".view-profile"
-      )
-      .forEach((button) => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const profileId =
-              button.dataset.profileId;
-
-
-            if (!profileId) {
-              return;
-            }
-
-
-            window.location.href =
-              `profile.html?id=${encodeURIComponent(
-                profileId
-              )}`;
-
-          }
-        );
-
-      });
-
-
-    // ----------------------------------------------
-    // Contact
-    // ----------------------------------------------
-
-    document
-      .querySelectorAll(
-        ".contact-profile"
-      )
-      .forEach((button) => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const profileId =
-              button.dataset.profileId;
-
-
-            showToast(
-              `Contact option selected for ${profileId}`
-            );
-
-          }
-        );
-
-      });
-
-  }
-
-
-  // ==================================================
+  // =========================
   // ACTIVE FILTERS
-  // ==================================================
+  // =========================
 
   function renderActiveFilters() {
 
-    if (!activeFilters) {
-      return;
-    }
-
+    if (!activeFilters) return;
 
     activeFilters.innerHTML = "";
 
 
-    // Keyword
-
     if (state.keyword) {
 
-      addFilterTag(
-        `Search: ${state.keyword}`,
-        () => {
-
+      addFilter(
+        "Search: " + state.keyword,
+        function () {
           state.keyword = "";
-
 
           if (searchInput) {
             searchInput.value = "";
           }
 
-
           state.page = 1;
 
           renderActiveFilters();
           renderListings();
-
         }
       );
-
     }
 
 
-    // City
-
     if (state.city) {
 
-      addFilterTag(
-        `City: ${state.city}`,
-        () => {
+      addFilter(
+        "City: " + state.city,
+        function () {
 
           state.city = "";
-
 
           if (citySelect) {
             citySelect.value = "";
           }
 
-
           state.page = 1;
 
           renderActiveFilters();
           renderListings();
-
         }
       );
-
     }
 
 
-    // Category
-
     if (state.category) {
 
-      addFilterTag(
-        `Category: ${state.category}`,
-        () => {
+      addFilter(
+        "Category: " + state.category,
+        function () {
 
           state.category = "";
 
@@ -973,58 +561,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
           renderActiveFilters();
           renderListings();
-
         }
       );
-
     }
-
   }
 
 
-  // ==================================================
-  // ADD FILTER TAG
-  // ==================================================
-
-  function addFilterTag(
-    label,
-    removeFunction
-  ) {
+  function addFilter(label, removeFunction) {
 
     const tag =
-      document.createElement(
-        "button"
-      );
+      document.createElement("button");
 
+    tag.type = "button";
 
-    tag.type =
-      "button";
+    tag.className = "filter-tag";
 
-
-    tag.className =
-      "filter-tag";
-
-
-    tag.textContent =
-      `${label} ×`;
-
+    tag.textContent = label + " ×";
 
     tag.addEventListener(
       "click",
       removeFunction
     );
 
-
-    activeFilters.appendChild(
-      tag
-    );
-
+    activeFilters.appendChild(tag);
   }
 
 
-  // ==================================================
+  // =========================
   // SEARCH
-  // ==================================================
+  // =========================
 
   function performSearch() {
 
@@ -1033,19 +598,15 @@ document.addEventListener("DOMContentLoaded", () => {
         ? searchInput.value.trim()
         : "";
 
-
     state.city =
       citySelect
         ? citySelect.value
         : "";
 
-
     state.page = 1;
-
 
     renderActiveFilters();
     renderListings();
-
   }
 
 
@@ -1055,7 +616,6 @@ document.addEventListener("DOMContentLoaded", () => {
       "click",
       performSearch
     );
-
   }
 
 
@@ -1063,204 +623,225 @@ document.addEventListener("DOMContentLoaded", () => {
 
     searchInput.addEventListener(
       "keydown",
-      (event) => {
+      function (event) {
 
         if (event.key === "Enter") {
           performSearch();
         }
-
       }
     );
-
   }
 
-
-  // ==================================================
-  // CITY SELECT
-  // ==================================================
 
   if (citySelect) {
 
     citySelect.addEventListener(
       "change",
-      () => {
+      function () {
 
         state.city =
           citySelect.value;
 
-
         state.page = 1;
-
 
         renderActiveFilters();
         renderListings();
-
       }
     );
-
   }
 
 
-  // ==================================================
-  // CATEGORY FILTER
-  // ==================================================
+  // =========================
+  // CATEGORY BUTTONS
+  // =========================
 
-  document
-    .querySelectorAll(
-      "[data-category]"
-    )
-    .forEach((element) => {
+  categoryButtons.forEach(
+    function (button) {
 
-      element.addEventListener(
+      button.addEventListener(
         "click",
-        () => {
-
-          const category =
-            element.dataset.category;
-
+        function () {
 
           state.category =
-            state.category === category
-              ? ""
-              : category;
-
+            button.getAttribute("data-category") || "";
 
           state.page = 1;
 
-
           renderActiveFilters();
           renderListings();
-
         }
       );
+    }
+  );
 
-    });
 
+  // =========================
+  // CITY BUTTONS
+  // =========================
 
-  // ==================================================
-  // CITY BUTTON FILTER
-  // ==================================================
+  cityButtons.forEach(
+    function (button) {
 
-  document
-    .querySelectorAll(
-      "[data-city]"
-    )
-    .forEach((element) => {
-
-      element.addEventListener(
+      button.addEventListener(
         "click",
-        () => {
+        function () {
 
           const city =
-            element.dataset.city;
+            button.getAttribute("data-city");
 
-
-          state.city =
-            state.city === city
-              ? ""
-              : city;
-
+          state.city = city;
 
           if (citySelect) {
-
-            citySelect.value =
-              state.city;
-
+            citySelect.value = city;
           }
 
-
           state.page = 1;
-
 
           renderActiveFilters();
           renderListings();
 
+          const listings =
+            document.getElementById("listings");
+
+          if (listings) {
+            listings.scrollIntoView({
+              behavior: "smooth"
+            });
+          }
         }
       );
+    }
+  );
 
-    });
 
-
-  // ==================================================
+  // =========================
   // SORT
-  // ==================================================
+  // =========================
 
   if (sortSelect) {
 
     sortSelect.addEventListener(
       "change",
-      () => {
+      function () {
 
         state.sort =
           sortSelect.value;
 
-
         state.page = 1;
 
-
         renderListings();
-
       }
     );
-
   }
 
 
-  // ==================================================
+  // =========================
   // CLEAR FILTERS
-  // ==================================================
+  // =========================
 
-  if (clearFiltersButton) {
+  if (clearFilters) {
 
-    clearFiltersButton.addEventListener(
+    clearFilters.addEventListener(
       "click",
-      () => {
+      function () {
 
         state.keyword = "";
         state.city = "";
         state.category = "";
+        state.sort = "featured";
         state.page = 1;
-
 
         if (searchInput) {
           searchInput.value = "";
         }
 
-
         if (citySelect) {
           citySelect.value = "";
         }
 
+        if (sortSelect) {
+          sortSelect.value = "featured";
+        }
 
         renderActiveFilters();
         renderListings();
-
       }
     );
-
   }
 
 
-  // ==================================================
+  // =========================
+  // MOBILE MENU
+  // =========================
+
+  if (
+    mobileMenuButton &&
+    mainNavigation
+  ) {
+
+    mobileMenuButton.addEventListener(
+      "click",
+      function () {
+
+        const isOpen =
+          mainNavigation.classList.toggle("menu-open");
+
+        mobileMenuButton.setAttribute(
+          "aria-expanded",
+          String(isOpen)
+        );
+      }
+    );
+  }
+
+
+  // =========================
   // POST LISTING
-  // ==================================================
+  // =========================
 
   if (postListingButton) {
 
     postListingButton.addEventListener(
       "click",
-      () => {
+      function () {
 
         showToast(
-          "Demo mode: listing submission will be connected to the backend later."
+          "Post Listing functionality will be connected later."
         );
-
       }
     );
-
   }
 
 
-  // ==================================================
-  // MOBILE MENU
   // =========================
+  // TOAST
+  // =========================
+
+  function showToast(message) {
+
+    const toast =
+      document.getElementById("toast");
+
+    if (!toast) return;
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    setTimeout(
+      function () {
+        toast.classList.remove("show");
+      },
+      3000
+    );
+  }
+
+
+  // =========================
+  // INITIAL RENDER
+  // =========================
+
+  renderActiveFilters();
+  renderListings();
+
+});
