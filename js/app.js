@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
       image.alt = `${profile.name} listing`;
     } else {
       image.src =
-        "assets/images/profiles/profile-placeholder.webp";
+        "assets/images/profiles/placeholder.svg";
 
       image.alt = "Profile image placeholder";
     }
@@ -229,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "error",
       () => {
         image.src =
-          "assets/images/profiles/profile-placeholder.webp";
+          "assets/images/profiles/placeholder.svg";
       },
       { once: true }
     );
