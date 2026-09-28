@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>AfterDark AU</title>
+
   <meta
     name="description"
     content="AfterDark AU — Australia-focused adult directory demo."
@@ -16,124 +17,207 @@
 <body>
 
   <!-- =========================
-       18+ AGE GATE
+       18+ AGE VERIFICATION
   ========================== -->
+
   <div id="ageGate" class="age-gate">
+
     <div class="age-gate-box">
-      <div class="age-gate-logo">AfterDark AU</div>
+
+      <div class="brand">
+        AfterDark <span>AU</span>
+      </div>
 
       <h1>18+ Only</h1>
 
       <p>
         This website is intended for adults aged 18 years or older.
-        By entering, you confirm that you are at least 18 years old.
       </p>
 
-      <div class="age-gate-actions">
-        <button id="enterWebsite" class="btn btn-primary" type="button">
+      <div class="age-actions">
+
+        <button
+          id="enterWebsite"
+          type="button"
+          class="btn primary"
+        >
           I am 18 years old
         </button>
 
-        <button id="leaveWebsite" class="btn btn-secondary" type="button">
+        <button
+          id="leaveWebsite"
+          type="button"
+          class="btn secondary"
+        >
           Leave
         </button>
+
       </div>
 
       <small>
-        Please leave this website if you are under 18.
+        By entering, you confirm that you are at least 18 years old.
       </small>
+
     </div>
+
   </div>
 
 
   <!-- =========================
        HEADER
   ========================== -->
-  <header class="site-header">
+
+  <header class="header">
+
     <div class="container header-inner">
 
-      <a href="index.html" class="logo">
+      <a
+        href="index.html"
+        class="logo"
+      >
         AfterDark <span>AU</span>
       </a>
 
       <button
         id="mobileMenuButton"
-        class="mobile-menu-button"
+        class="menu-btn"
         type="button"
         aria-label="Open menu"
-        aria-expanded="false"
       >
         ☰
       </button>
 
-      <nav id="mainNavigation" class="main-navigation">
-        <a href="#listings">Listings</a>
-        <a href="#categories">Categories</a>
-        <a href="#cities">Cities</a>
-        <a href="#safety">Safety</a>
+      <nav id="mainNavigation">
 
-        <button
-          id="postListingButton"
-          class="nav-post-button"
-          type="button"
-        >
-          Post Listing
-        </button>
+        <a href="#listings">
+          Listings
+        </a>
+
+        <a href="#categories">
+          Categories
+        </a>
+
+        <a href="#cities">
+          Cities
+        </a>
+
+        <a href="#safety">
+          Safety
+        </a>
+
       </nav>
 
     </div>
+
   </header>
 
 
+  <!-- =========================
+       MAIN
+  ========================== -->
+
   <main>
 
-    <!-- =========================
-         HERO
-    ========================== -->
-    <section class="hero-section">
-      <div class="container hero-content">
 
-        <p class="hero-kicker">AUSTRALIA DIRECTORY</p>
+    <!-- HERO -->
 
-        <h1>Discover profiles across Australia</h1>
+    <section class="hero">
 
-        <p class="hero-subtitle">
-          Browse demo profiles by city and category.
+      <div class="container">
+
+        <p class="eyebrow">
+          AUSTRALIA DIRECTORY
         </p>
 
-        <div class="hero-search">
+        <h1>
+          Discover profiles across Australia
+        </h1>
 
-          <div class="search-field">
-            <label for="searchInput">Search</label>
+        <p class="hero-copy">
+          Browse fictional demo profiles by city and category.
+        </p>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+          <div class="field">
+
+            <label for="searchInput">
+              Search
+            </label>
+
             <input
               id="searchInput"
               type="search"
               placeholder="Search profiles..."
               autocomplete="off"
             >
+
           </div>
 
-          <div class="search-field">
-            <label for="citySelect">City</label>
+
+          <div class="field">
+
+            <label for="citySelect">
+              City
+            </label>
 
             <select id="citySelect">
-              <option value="">All cities</option>
-              <option value="Sydney">Sydney</option>
-              <option value="Melbourne">Melbourne</option>
-              <option value="Brisbane">Brisbane</option>
-              <option value="Perth">Perth</option>
-              <option value="Adelaide">Adelaide</option>
-              <option value="Gold Coast">Gold Coast</option>
-              <option value="Canberra">Canberra</option>
-              <option value="Newcastle">Newcastle</option>
-              <option value="Hobart">Hobart</option>
-              <option value="Darwin">Darwin</option>
+
+              <option value="">
+                All cities
+              </option>
+
+              <option value="Sydney">
+                Sydney
+              </option>
+
+              <option value="Melbourne">
+                Melbourne
+              </option>
+
+              <option value="Brisbane">
+                Brisbane
+              </option>
+
+              <option value="Perth">
+                Perth
+              </option>
+
+              <option value="Adelaide">
+                Adelaide
+              </option>
+
+              <option value="Gold Coast">
+                Gold Coast
+              </option>
+
+              <option value="Canberra">
+                Canberra
+              </option>
+
+              <option value="Newcastle">
+                Newcastle
+              </option>
+
+              <option value="Hobart">
+                Hobart
+              </option>
+
+              <option value="Darwin">
+                Darwin
+              </option>
+
             </select>
+
           </div>
+
 
           <button
             id="searchButton"
-            class="btn btn-primary search-button"
+            class="btn primary search-btn"
             type="button"
           >
             Search
@@ -142,24 +226,34 @@
         </div>
 
       </div>
+
     </section>
 
 
     <!-- =========================
          CATEGORIES
     ========================== -->
-    <section id="categories" class="category-section">
+
+    <section
+      id="categories"
+      class="section"
+    >
+
       <div class="container">
 
-        <div class="section-heading">
-          <p class="section-kicker">BROWSE</p>
-          <h2>Categories</h2>
-        </div>
+        <p class="eyebrow">
+          BROWSE
+        </p>
 
-        <div class="category-list">
+        <h2>
+          Categories
+        </h2>
+
+
+        <div class="chips">
 
           <button
-            class="category-button"
+            class="chip"
             type="button"
             data-category=""
           >
@@ -167,7 +261,7 @@
           </button>
 
           <button
-            class="category-button"
+            class="chip"
             type="button"
             data-category="Independent"
           >
@@ -175,7 +269,7 @@
           </button>
 
           <button
-            class="category-button"
+            class="chip"
             type="button"
             data-category="Studios"
           >
@@ -183,7 +277,7 @@
           </button>
 
           <button
-            class="category-button"
+            class="chip"
             type="button"
             data-category="Agencies"
           >
@@ -191,7 +285,7 @@
           </button>
 
           <button
-            class="category-button"
+            class="chip"
             type="button"
             data-category="Services"
           >
@@ -201,89 +295,166 @@
         </div>
 
       </div>
+
     </section>
 
 
     <!-- =========================
          CITIES
     ========================== -->
-    <section id="cities" class="city-section">
+
+    <section
+      id="cities"
+      class="section alt"
+    >
+
       <div class="container">
 
-        <div class="section-heading">
-          <p class="section-kicker">LOCATION</p>
-          <h2>Popular cities</h2>
-        </div>
+        <p class="eyebrow">
+          LOCATION
+        </p>
 
-        <div class="city-list">
+        <h2>
+          Popular cities
+        </h2>
 
-          <button type="button" class="city-button" data-city="Sydney">
+
+        <div class="chips">
+
+          <button
+            class="chip"
+            type="button"
+            data-city="Sydney"
+          >
             Sydney
           </button>
 
-          <button type="button" class="city-button" data-city="Melbourne">
+          <button
+            class="chip"
+            type="button"
+            data-city="Melbourne"
+          >
             Melbourne
           </button>
 
-          <button type="button" class="city-button" data-city="Brisbane">
+          <button
+            class="chip"
+            type="button"
+            data-city="Brisbane"
+          >
             Brisbane
           </button>
 
-          <button type="button" class="city-button" data-city="Perth">
+          <button
+            class="chip"
+            type="button"
+            data-city="Perth"
+          >
             Perth
           </button>
 
-          <button type="button" class="city-button" data-city="Adelaide">
+          <button
+            class="chip"
+            type="button"
+            data-city="Adelaide"
+          >
             Adelaide
           </button>
 
-          <button type="button" class="city-button" data-city="Gold Coast">
+          <button
+            class="chip"
+            type="button"
+            data-city="Gold Coast"
+          >
             Gold Coast
           </button>
 
-          <button type="button" class="city-button" data-city="Canberra">
+          <button
+            class="chip"
+            type="button"
+            data-city="Canberra"
+          >
             Canberra
           </button>
 
-          <button type="button" class="city-button" data-city="Newcastle">
+          <button
+            class="chip"
+            type="button"
+            data-city="Newcastle"
+          >
             Newcastle
           </button>
 
-          <button type="button" class="city-button" data-city="Hobart">
+          <button
+            class="chip"
+            type="button"
+            data-city="Hobart"
+          >
             Hobart
           </button>
 
-          <button type="button" class="city-button" data-city="Darwin">
+          <button
+            class="chip"
+            type="button"
+            data-city="Darwin"
+          >
             Darwin
           </button>
 
         </div>
 
       </div>
+
     </section>
 
 
     <!-- =========================
          LISTINGS
     ========================== -->
-    <section id="listings" class="listing-section">
+
+    <section
+      id="listings"
+      class="section"
+    >
+
       <div class="container">
 
-        <div class="listing-header">
 
-          <div class="section-heading">
-            <p class="section-kicker">DIRECTORY</p>
-            <h2>Profiles</h2>
+        <div class="section-head">
+
+          <div>
+
+            <p class="eyebrow">
+              DIRECTORY
+            </p>
+
+            <h2>
+              Profiles
+            </h2>
+
           </div>
 
-          <div class="listing-controls">
 
-            <label for="sortSelect">Sort</label>
+          <div class="sort-wrap">
+
+            <label for="sortSelect">
+              Sort
+            </label>
 
             <select id="sortSelect">
-              <option value="featured">Featured</option>
-              <option value="newest">Newest</option>
-              <option value="name">Name</option>
+
+              <option value="featured">
+                Featured
+              </option>
+
+              <option value="newest">
+                Newest
+              </option>
+
+              <option value="name">
+                Name
+              </option>
+
             </select>
 
           </div>
@@ -291,26 +462,41 @@
         </div>
 
 
-        <!-- Active filters -->
-        <div id="activeFilters" class="active-filters"></div>
+        <!-- ACTIVE FILTERS -->
+
+        <div
+          id="activeFilters"
+          class="active-filters"
+        ></div>
 
 
-        <!-- Profile cards -->
-        <div id="listingGrid" class="listing-grid"></div>
+        <!-- PROFILE GRID -->
+
+        <div
+          id="listingGrid"
+          class="listing-grid"
+        ></div>
 
 
-        <!-- Empty state -->
-        <div id="emptyState" class="empty-state" hidden>
+        <!-- EMPTY STATE -->
 
-          <h3>No profiles found</h3>
+        <div
+          id="emptyState"
+          class="empty"
+          hidden
+        >
+
+          <h3>
+            No profiles found
+          </h3>
 
           <p>
-            Try changing your search, city or category.
+            Try another search, city or category.
           </p>
 
           <button
             id="clearFilters"
-            class="btn btn-primary"
+            class="btn primary"
             type="button"
           >
             Clear filters
@@ -319,57 +505,86 @@
         </div>
 
 
-        <!-- Pagination -->
+        <!-- PAGINATION -->
+
         <div
           id="pagination"
-          class="pagination-wrapper"
+          class="pagination"
           aria-label="Pagination"
         ></div>
 
       </div>
+
     </section>
 
 
     <!-- =========================
          SAFETY
     ========================== -->
-    <section id="safety" class="safety-section">
+
+    <section
+      id="safety"
+      class="section alt"
+    >
+
       <div class="container">
 
-        <div class="section-heading">
-          <p class="section-kicker">SAFETY</p>
-          <h2>Stay safe online</h2>
-        </div>
+        <p class="eyebrow">
+          SAFETY
+        </p>
+
+        <h2>
+          Stay safe online
+        </h2>
+
 
         <div class="safety-grid">
 
-          <div class="safety-card">
-            <h3>Protect your information</h3>
-            <p>
-              Avoid sharing passwords, financial information or unnecessary
-              personal details with people you do not know.
-            </p>
-          </div>
+          <article>
 
-          <div class="safety-card">
-            <h3>Meet responsibly</h3>
-            <p>
-              If you meet someone you found online, use your own judgement,
-              choose a safe environment and tell someone you trust where you are.
-            </p>
-          </div>
+            <h3>
+              Protect information
+            </h3>
 
-          <div class="safety-card">
-            <h3>Report concerns</h3>
             <p>
-              Do not continue interactions that make you uncomfortable.
-              Keep relevant evidence and use appropriate reporting channels.
+              Avoid sharing passwords, financial details
+              or unnecessary personal information.
             </p>
-          </div>
+
+          </article>
+
+
+          <article>
+
+            <h3>
+              Meet responsibly
+            </h3>
+
+            <p>
+              Use your judgement, choose safe environments
+              and tell someone you trust where you are.
+            </p>
+
+          </article>
+
+
+          <article>
+
+            <h3>
+              Report concerns
+            </h3>
+
+            <p>
+              Stop interactions that make you uncomfortable
+              and use appropriate reporting channels.
+            </p>
+
+          </article>
 
         </div>
 
       </div>
+
     </section>
 
   </main>
@@ -378,51 +593,44 @@
   <!-- =========================
        FOOTER
   ========================== -->
-  <footer class="site-footer">
+
+  <footer class="footer">
+
     <div class="container footer-inner">
 
-      <div>
-        <div class="logo">
-          AfterDark <span>AU</span>
-        </div>
-
-        <p>
-          Australia-focused directory demo.
-        </p>
+      <div class="logo">
+        AfterDark <span>AU</span>
       </div>
 
-      <div class="footer-links">
-        <a href="#listings">Listings</a>
-        <a href="#categories">Categories</a>
-        <a href="#cities">Cities</a>
-        <a href="#safety">Safety</a>
-      </div>
-
-    </div>
-
-    <div class="container footer-bottom">
       <p>
-        © 2026 AfterDark AU. 18+ only.
+        Fictional demo directory • 18+ only
       </p>
+
     </div>
+
   </footer>
 
 
   <!-- =========================
        TOAST
   ========================== -->
+
   <div
     id="toast"
     class="toast"
-    role="status"
     aria-live="polite"
   ></div>
 
 
-  <!-- IMPORTANT:
-       seed-data.js MUST load before app.js
-  -->
+  <!-- =========================
+       JAVASCRIPT
+       IMPORTANT:
+       seed-data.js FIRST
+       app.js SECOND
+  ========================== -->
+
   <script src="js/seed-data.js"></script>
+
   <script src="js/app.js"></script>
 
 </body>
