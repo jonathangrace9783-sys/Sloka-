@@ -1,90 +1,122 @@
-/* =========================================
-   AFTERDARK AU
-   DEMO PROFILE SEED GENERATOR
+// js/seed-data.js
 
-   Generates 1,000 fictional profiles.
-   No external website scraping.
-========================================= */
+(() => {
+  "use strict";
 
-const DEMO_PROFILE_COUNT = 1000;
+  // ==================================================
+  // SETTINGS
+  // ==================================================
 
-const AUSTRALIAN_LOCATIONS = [
+  const DEMO_PROFILE_COUNT = 1000;
+
+  const STORAGE_KEY =
+    "afterdarkDemoProfiles";
+
+
+  // ==================================================
+  // LOCATIONS
+  // ==================================================
+
+  const locations = [
     {
-        city: "Sydney",
-        state: "NSW"
+      city: "Sydney",
+      state: "NSW",
+      country: "Australia"
     },
     {
-        city: "Melbourne",
-        state: "VIC"
+      city: "Melbourne",
+      state: "VIC",
+      country: "Australia"
     },
     {
-        city: "Brisbane",
-        state: "QLD"
+      city: "Brisbane",
+      state: "QLD",
+      country: "Australia"
     },
     {
-        city: "Perth",
-        state: "WA"
+      city: "Perth",
+      state: "WA",
+      country: "Australia"
     },
     {
-        city: "Adelaide",
-        state: "SA"
+      city: "Adelaide",
+      state: "SA",
+      country: "Australia"
     },
     {
-        city: "Gold Coast",
-        state: "QLD"
+      city: "Gold Coast",
+      state: "QLD",
+      country: "Australia"
     },
     {
-        city: "Canberra",
-        state: "ACT"
+      city: "Canberra",
+      state: "ACT",
+      country: "Australia"
     },
     {
-        city: "Newcastle",
-        state: "NSW"
+      city: "Newcastle",
+      state: "NSW",
+      country: "Australia"
     },
     {
-        city: "Hobart",
-        state: "TAS"
+      city: "Hobart",
+      state: "TAS",
+      country: "Australia"
     },
     {
-        city: "Darwin",
-        state: "NT"
+      city: "Darwin",
+      state: "NT",
+      country: "Australia"
     }
-];
+  ];
 
 
-const CATEGORIES = [
+  // ==================================================
+  // CATEGORIES
+  // ==================================================
+
+  const categories = [
     "Independent",
     "Studios",
     "Agencies",
     "Services"
-];
+  ];
 
 
-const FIRST_NAMES = [
+  // ==================================================
+  // DEMO NAMES
+  // ==================================================
+
+  const firstNames = [
     "Ava",
     "Sophie",
     "Olivia",
     "Mia",
-    "Isla",
+    "Chloe",
     "Ella",
     "Grace",
-    "Chloe",
     "Amelia",
+    "Isla",
     "Ruby",
-    "Lily",
     "Emily",
-    "Harper",
-    "Sienna",
+    "Lily",
     "Zoe",
+    "Harper",
     "Maya",
+    "Emma",
     "Aria",
     "Layla",
+    "Sienna",
     "Ella",
-    "Scarlett"
-];
+    "Taylor",
+    "Morgan",
+    "Jordan",
+    "Alex",
+    "Riley"
+  ];
 
 
-const LAST_INITIALS = [
+  const lastInitials = [
     "A",
     "B",
     "C",
@@ -102,272 +134,345 @@ const LAST_INITIALS = [
     "R",
     "S",
     "T"
-];
+  ];
 
 
-/* =========================================
-   RANDOM HELPERS
-========================================= */
+  // ==================================================
+  // DESCRIPTIONS
+  // ==================================================
 
-function randomItem(array) {
+  const descriptions = [
+    "Professional profile available in the local area.",
+    "Independent profile with a polished presentation.",
+    "Featured demo profile for directory testing.",
+    "Demo profile created for testing search and filtering.",
+    "Local directory profile with verified demo information.",
+    "Professional demo listing with profile details.",
+    "Example profile created for the Australia directory.",
+    "Demo listing available for testing the profile system."
+  ];
+
+
+  // ==================================================
+  // HELPERS
+  // ==================================================
+
+  function randomItem(array) {
 
     return array[
-        Math.floor(
-            Math.random() * array.length
-        )
+      Math.floor(
+        Math.random() * array.length
+      )
     ];
 
-}
+  }
 
 
-function randomNumber(min, max) {
+  function randomNumber(min, max) {
 
     return Math.floor(
-        Math.random() *
-        (max - min + 1)
+      Math.random() *
+      (max - min + 1)
     ) + min;
 
-}
+  }
 
 
-/* =========================================
-   CREATE PHOTO SLOTS
-========================================= */
+  function randomBoolean(probability = 0.5) {
 
-function createPhotoSlots(profileId) {
+    return Math.random() < probability;
+
+  }
+
+
+  function padNumber(number, length = 4) {
+
+    return String(number)
+      .padStart(length, "0");
+
+  }
+
+
+  // ==================================================
+  // IMAGE PATH
+  // ==================================================
+
+  function getPhotoPath(profileNumber) {
+
+    /*
+      We currently use one standard demo image
+      path.
+
+      Later, real authorized images can be
+      connected here.
+    */
+
+    return (
+      "assets/images/profiles/" +
+      "profile-" +
+      padNumber(profileNumber) +
+      ".jpg"
+    );
+
+  }
+
+
+  // ==================================================
+  // CREATE PHOTO SLOTS
+  // ==================================================
+
+  function createPhotoSlots(profileNumber) {
 
     const photoCount =
-        randomNumber(4, 20);
+      randomNumber(4, 20);
+
 
     const photos = [];
 
 
     for (
-        let index = 1;
-        index <= photoCount;
-        index++
+      let i = 1;
+      i <= photoCount;
+      i++
     ) {
 
-        const paddedProfile =
-            String(profileId)
-                .padStart(4, "0");
+      /*
+        For now all photo slots point to the
+        profile's primary demo image.
 
+        This keeps the demo lightweight.
 
-        const paddedPhoto =
-            String(index)
-                .padStart(2, "0");
+        Later these can become:
+        photo-01.jpg
+        photo-02.jpg
+        etc.
+      */
 
+      photos.push({
 
-        photos.push({
+        id:
+          `photo-${i}`,
 
-            id:
-                `${paddedProfile}-${paddedPhoto}`,
+        src:
+          getPhotoPath(
+            profileNumber
+          ),
 
-            /*
-             * Placeholder path.
-             *
-             * Replace later with your own
-             * authorized/generated image URL.
-             */
+        alt:
+          `Profile photo ${i}`
 
-            src:
-                `assets/images/profiles/${paddedProfile}/photo-${paddedPhoto}.jpg`,
-
-            alt:
-                `Demo profile ${paddedProfile} photo ${paddedPhoto}`
-
-        });
+      });
 
     }
 
 
     return photos;
 
-}
+  }
 
 
-/* =========================================
-   CREATE ONE PROFILE
-========================================= */
+  // ==================================================
+  // CREATE PROFILE
+  // ==================================================
 
-function createProfile(profileId) {
+  function createProfile(profileNumber) {
 
     const location =
-        randomItem(
-            AUSTRALIAN_LOCATIONS
-        );
+      randomItem(locations);
 
 
     const firstName =
-        randomItem(
-            FIRST_NAMES
-        );
+      randomItem(firstNames);
 
 
     const initial =
-        randomItem(
-            LAST_INITIALS
-        );
+      randomItem(lastInitials);
 
 
     const category =
-        randomItem(
-            CATEGORIES
-        );
+      randomItem(categories);
+
+
+    const age =
+      randomNumber(21, 45);
+
+
+    const displayName =
+      `${firstName} ${initial}.`;
+
+
+    const username =
+      `${firstName.toLowerCase()}${initial.toLowerCase()}${profileNumber}`;
+
+
+    const id =
+      `profile-${profileNumber}`;
 
 
     return {
 
-        id:
-            profileId,
+      id,
 
-        username:
-            `${firstName.toLowerCase()}-${profileId}`,
+      username,
 
-        displayName:
-            `${firstName} ${initial}.`,
+      displayName,
 
-        age:
-            randomNumber(21, 45),
+      age,
 
-        city:
-            location.city,
+      city:
+        location.city,
 
-        state:
-            location.state,
+      state:
+        location.state,
 
-        country:
-            "Australia",
+      country:
+        location.country,
 
-        category:
-            category,
+      category,
 
-        verified:
-            Math.random() > 0.35,
+      verified:
+        randomBoolean(0.35),
 
-        featured:
-            Math.random() > 0.82,
+      featured:
+        randomBoolean(0.12),
 
-        online:
-            Math.random() > 0.5,
+      online:
+        randomBoolean(0.45),
 
-        createdAt:
-            new Date(
-                Date.now() -
-                randomNumber(
-                    1,
-                    365
-                ) *
-                24 *
-                60 *
-                60 *
-                1000
-            ).toISOString(),
+      createdAt:
+        new Date(
+          Date.now() -
+          randomNumber(
+            0,
+            365
+          ) *
+          24 *
+          60 *
+          60 *
+          1000
+        ).toISOString(),
 
-        description:
-            "Fictional demo profile created for frontend testing. Replace this text with lawful, user-provided listing information.",
+      description:
+        randomItem(
+          descriptions
+        ),
 
-        photos:
-            createPhotoSlots(
-                profileId
-            )
+      photos:
+        createPhotoSlots(
+          profileNumber
+        )
 
     };
 
-}
+  }
 
 
-/* =========================================
-   GENERATE 1,000 PROFILES
-========================================= */
+  // ==================================================
+  // GENERATE PROFILES
+  // ==================================================
 
-function generateDemoProfiles(
-    count = DEMO_PROFILE_COUNT
-) {
+  function generateDemoProfiles(
+    count
+  ) {
 
     const profiles = [];
 
 
     for (
-        let id = 1;
-        id <= count;
-        id++
+      let i = 1;
+      i <= count;
+      i++
     ) {
 
-        profiles.push(
-            createProfile(id)
-        );
+      profiles.push(
+        createProfile(i)
+      );
 
     }
 
 
     return profiles;
 
-}
+  }
 
 
-/* =========================================
-   GENERATE DATA
-========================================= */
+  // ==================================================
+  // LOAD / CREATE DATA
+  // ==================================================
 
-const demoProfiles =
-    generateDemoProfiles();
+  let profiles = [];
 
 
-/* =========================================
-   SAVE TO BROWSER
-========================================= */
+  try {
 
-try {
+    const saved =
+      localStorage.getItem(
+        STORAGE_KEY
+      );
 
-    localStorage.setItem(
-        "afterdarkDemoProfiles",
-        JSON.stringify(
-            demoProfiles
-        )
+
+    if (saved) {
+
+      profiles =
+        JSON.parse(saved);
+
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Could not read saved demo profiles.",
+      error
     );
 
-} catch (error) {
+  }
 
-    console.error(
-        "Unable to save demo profiles:",
+
+  // If data does not exist or count is wrong,
+  // generate fresh demo data.
+
+  if (
+    !Array.isArray(profiles) ||
+    profiles.length !==
+      DEMO_PROFILE_COUNT
+  ) {
+
+    profiles =
+      generateDemoProfiles(
+        DEMO_PROFILE_COUNT
+      );
+
+
+    try {
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(profiles)
+      );
+
+    } catch (error) {
+
+      console.warn(
+        "Could not save demo profiles to localStorage.",
         error
-    );
+      );
 
-}
+    }
 
-
-/* =========================================
-   GLOBAL ACCESS
-========================================= */
-
-window.afterdarkDemoProfiles =
-    demoProfiles;
+  }
 
 
-/* =========================================
-   CONSOLE INFORMATION
-========================================= */
+  // ==================================================
+  // GLOBAL DATA
+  // ==================================================
 
-console.log(
-    `Generated ${demoProfiles.length} fictional demo profiles.`
-);
-
-console.log(
-    "Maximum photo slots per profile: 20"
-);
+  window.afterdarkDemoProfiles =
+    profiles;
 
 
-/* =========================================
-   OPTIONAL EXPORT
-========================================= */
+  console.log(
+    `Loaded ${profiles.length} demo profiles.`
+  );
 
-if (
-    typeof module !== "undefined" &&
-    module.exports
-) {
 
-    module.exports =
-        generateDemoProfiles;
-
-}
+})();
