@@ -1,79 +1,21 @@
-// js/seed-data.js
-
 (() => {
   "use strict";
 
-  // ==================================================
-  // SETTINGS
-  // ==================================================
+  const COUNT = 1000;
+  const STORAGE_KEY = "afterdarkDemoProfilesV3";
 
-  const DEMO_PROFILE_COUNT = 1000;
-
-  const STORAGE_KEY =
-    "afterdarkDemoProfiles";
-
-
-  // ==================================================
-  // LOCATIONS
-  // ==================================================
-
-  const locations = [
-    {
-      city: "Sydney",
-      state: "NSW",
-      country: "Australia"
-    },
-    {
-      city: "Melbourne",
-      state: "VIC",
-      country: "Australia"
-    },
-    {
-      city: "Brisbane",
-      state: "QLD",
-      country: "Australia"
-    },
-    {
-      city: "Perth",
-      state: "WA",
-      country: "Australia"
-    },
-    {
-      city: "Adelaide",
-      state: "SA",
-      country: "Australia"
-    },
-    {
-      city: "Gold Coast",
-      state: "QLD",
-      country: "Australia"
-    },
-    {
-      city: "Canberra",
-      state: "ACT",
-      country: "Australia"
-    },
-    {
-      city: "Newcastle",
-      state: "NSW",
-      country: "Australia"
-    },
-    {
-      city: "Hobart",
-      state: "TAS",
-      country: "Australia"
-    },
-    {
-      city: "Darwin",
-      state: "NT",
-      country: "Australia"
-    }
+  const cities = [
+    ["Sydney", "NSW"],
+    ["Melbourne", "VIC"],
+    ["Brisbane", "QLD"],
+    ["Perth", "WA"],
+    ["Adelaide", "SA"],
+    ["Gold Coast", "QLD"],
+    ["Canberra", "ACT"],
+    ["Newcastle", "NSW"],
+    ["Hobart", "TAS"],
+    ["Darwin", "NT"]
   ];
-
-
-  // ==================================================
-  // CATEGORIES
-  // ==================================================
 
   const categories = [
     "Independent",
@@ -82,397 +24,136 @@
     "Services"
   ];
 
-
-  // ==================================================
-  // DEMO NAMES
-  // ==================================================
-
-  const firstNames = [
-    "Ava",
-    "Sophie",
-    "Olivia",
+  const names = [
+    "Avery",
     "Mia",
+    "Sophie",
+    "Ella",
     "Chloe",
-    "Ella",
-    "Grace",
-    "Amelia",
-    "Isla",
     "Ruby",
-    "Emily",
-    "Lily",
     "Zoe",
-    "Harper",
-    "Maya",
-    "Emma",
+    "Isla",
+    "Lily",
+    "Nora",
     "Aria",
+    "Maya",
+    "Eva",
+    "Lucy",
+    "Ivy",
+    "Amelia",
+    "Grace",
     "Layla",
-    "Sienna",
-    "Ella",
-    "Taylor",
-    "Morgan",
-    "Jordan",
-    "Alex",
-    "Riley"
+    "Emma",
+    "Olivia"
   ];
-
-
-  const lastInitials = [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "P",
-    "R",
-    "S",
-    "T"
-  ];
-
-
-  // ==================================================
-  // DESCRIPTIONS
-  // ==================================================
 
   const descriptions = [
-    "Professional profile available in the local area.",
-    "Independent profile with a polished presentation.",
-    "Featured demo profile for directory testing.",
-    "Demo profile created for testing search and filtering.",
-    "Local directory profile with verified demo information.",
-    "Professional demo listing with profile details.",
-    "Example profile created for the Australia directory.",
-    "Demo listing available for testing the profile system."
+    "Fictional demo profile for testing the directory layout.",
+    "Professional demo listing created for website testing.",
+    "Sample profile for testing search, filters and pagination.",
+    "Fictional profile used for the AfterDark AU demonstration."
   ];
 
-
-  // ==================================================
-  // HELPERS
-  // ==================================================
-
-  function randomItem(array) {
-
-    return array[
-      Math.floor(
-        Math.random() * array.length
-      )
-    ];
-
+  function pick(array) {
+    return array[Math.floor(Math.random() * array.length)];
   }
 
-
-  function randomNumber(min, max) {
-
-    return Math.floor(
-      Math.random() *
-      (max - min + 1)
-    ) + min;
-
+  function pad(number) {
+    return String(number).padStart(4, "0");
   }
 
+  function randomDate() {
+    const daysAgo = Math.floor(Math.random() * 730);
 
-  function randomBoolean(probability = 0.5) {
-
-    return Math.random() < probability;
-
+    return new Date(
+      Date.now() - daysAgo * 24 * 60 * 60 * 1000
+    ).toISOString();
   }
 
-
-  function padNumber(number, length = 4) {
-
-    return String(number)
-      .padStart(length, "0");
-
-  }
-
-
-  // ==================================================
-  // IMAGE PATH
-  // ==================================================
-
-  function getPhotoPath(profileNumber) {
-
-    /*
-      We currently use one standard demo image
-      path.
-
-      Later, real authorized images can be
-      connected here.
-    */
-
-    return (
-      "assets/images/profiles/" +
-      "profile-" +
-      padNumber(profileNumber) +
-      ".jpg"
-    );
-
-  }
-
-
-  // ==================================================
-  // CREATE PHOTO SLOTS
-  // ==================================================
-
-  function createPhotoSlots(profileNumber) {
-
-    const photoCount =
-      randomNumber(4, 20);
-
-
-    const photos = [];
-
-
-    for (
-      let i = 1;
-      i <= photoCount;
-      i++
-    ) {
-
-      /*
-        For now all photo slots point to the
-        profile's primary demo image.
-
-        This keeps the demo lightweight.
-
-        Later these can become:
-        photo-01.jpg
-        photo-02.jpg
-        etc.
-      */
-
-      photos.push({
-
-        id:
-          `photo-${i}`,
-
-        src:
-          getPhotoPath(
-            profileNumber
-          ),
-
-        alt:
-          `Profile photo ${i}`
-
-      });
-
-    }
-
-
-    return photos;
-
-  }
-
-
-  // ==================================================
-  // CREATE PROFILE
-  // ==================================================
-
-  function createProfile(profileNumber) {
-
-    const location =
-      randomItem(locations);
-
-
-    const firstName =
-      randomItem(firstNames);
-
-
-    const initial =
-      randomItem(lastInitials);
-
-
-    const category =
-      randomItem(categories);
-
-
-    const age =
-      randomNumber(21, 45);
-
-
-    const displayName =
-      `${firstName} ${initial}.`;
-
-
-    const username =
-      `${firstName.toLowerCase()}${initial.toLowerCase()}${profileNumber}`;
-
-
-    const id =
-      `profile-${profileNumber}`;
-
+  function createProfile(index) {
+    const [city, state] = pick(cities);
+    const firstName = pick(names);
 
     return {
+      id: `profile-${index}`,
 
-      id,
+      username:
+        `${firstName.toLowerCase()}_${pad(index)}`,
 
-      username,
+      displayName:
+        `${firstName} ${String.fromCharCode(65 + (index % 26))}.`,
 
-      displayName,
+      age:
+        21 + (index % 25),
 
-      age,
+      city,
+      state,
+      country: "Australia",
 
-      city:
-        location.city,
-
-      state:
-        location.state,
-
-      country:
-        location.country,
-
-      category,
+      category:
+        pick(categories),
 
       verified:
-        randomBoolean(0.35),
+        Math.random() < 0.38,
 
       featured:
-        randomBoolean(0.12),
+        Math.random() < 0.12,
 
       online:
-        randomBoolean(0.45),
+        Math.random() < 0.45,
 
       createdAt:
-        new Date(
-          Date.now() -
-          randomNumber(
-            0,
-            365
-          ) *
-          24 *
-          60 *
-          60 *
-          1000
-        ).toISOString(),
+        randomDate(),
 
       description:
-        randomItem(
-          descriptions
-        ),
+        pick(descriptions),
 
-      photos:
-        createPhotoSlots(
-          profileNumber
-        )
-
+      photos: [
+        "assets/images/profiles/placeholder.svg"
+      ]
     };
-
   }
 
-
-  // ==================================================
-  // GENERATE PROFILES
-  // ==================================================
-
-  function generateDemoProfiles(
-    count
-  ) {
-
-    const profiles = [];
-
-
-    for (
-      let i = 1;
-      i <= count;
-      i++
-    ) {
-
-      profiles.push(
-        createProfile(i)
-      );
-
-    }
-
-
-    return profiles;
-
-  }
-
-
-  // ==================================================
-  // LOAD / CREATE DATA
-  // ==================================================
-
-  let profiles = [];
-
-
-  try {
-
-    const saved =
-      localStorage.getItem(
-        STORAGE_KEY
-      );
-
-
-    if (saved) {
-
-      profiles =
-        JSON.parse(saved);
-
-    }
-
-  } catch (error) {
-
-    console.warn(
-      "Could not read saved demo profiles.",
-      error
-    );
-
-  }
-
-
-  // If data does not exist or count is wrong,
-  // generate fresh demo data.
-
-  if (
-    !Array.isArray(profiles) ||
-    profiles.length !==
-      DEMO_PROFILE_COUNT
-  ) {
-
-    profiles =
-      generateDemoProfiles(
-        DEMO_PROFILE_COUNT
-      );
-
+  function loadProfiles() {
+    let stored = null;
 
     try {
+      stored = JSON.parse(
+        localStorage.getItem(STORAGE_KEY) || "null"
+      );
+    } catch (error) {
+      stored = null;
+    }
 
+    if (
+      Array.isArray(stored) &&
+      stored.length === COUNT
+    ) {
+      return stored;
+    }
+
+    const profiles = Array.from(
+      { length: COUNT },
+      (_, index) => createProfile(index + 1)
+    );
+
+    try {
       localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify(profiles)
       );
-
     } catch (error) {
-
-      console.warn(
-        "Could not save demo profiles to localStorage.",
-        error
-      );
-
+      // LocalStorage unavailable or full.
     }
 
+    return profiles;
   }
 
-
-  // ==================================================
-  // GLOBAL DATA
-  // ==================================================
-
-  window.afterdarkDemoProfiles =
-    profiles;
-
+  window.afterdarkDemoProfiles = loadProfiles();
 
   console.log(
-    `Loaded ${profiles.length} demo profiles.`
+    "AfterDark AU:",
+    window.afterdarkDemoProfiles.length,
+    "fictional demo profiles loaded."
   );
-
-
 })();
